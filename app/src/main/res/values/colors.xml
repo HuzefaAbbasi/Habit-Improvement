@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+
+    //TextColors
+    <color name="lightWhite">#E2E2E2</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="text">#949494</color>
+
+    // Base Colors (Shades of Black)
+    <color name="base">#242424</color>
+    <color name="primary">#262626</color>
+    <color name="secondary1">#121212</color>
+    <color name="secondary2">#1E1E1E</color>
+    <color name="black">#000000</color>
+
+    //Categories
+    <color name="work">#7B80FB</color>
+    <color name="sleep">#B870FF</color>
+    <color name="spiritual">#5AFFB7</color>
+    <color name="relax">#BDB5B5</color>
+    <color name="development">#FF9C54</color>
+    <color name="social">#FF5B5B</color>
+
+    //brand Color
+    <color name="brand">#068D52</color>
+
+
+</resources>
