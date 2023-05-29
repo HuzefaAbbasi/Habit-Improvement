@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.List;
 
 public class DBHelper extends SQLiteOpenHelper {
 
@@ -112,18 +113,18 @@ public class DBHelper extends SQLiteOpenHelper {
         Log.d("myTag2", Integer.toString(rowsUpdates));
     }
 
-    public ArrayList<Task> getTasks() {
-        ArrayList<Task> taskList = new ArrayList<>();
-        String selectQuery = "SELECT name, taskEnum FROM Task";
+    public List<Task> getAllTasks() {
+        List<Task> taskList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT * FROM Task";
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
             do {
-                @SuppressLint("Range") int taskEnumOrdinal = cursor.getInt(cursor.getColumnIndex("taskEnum"));
+                @SuppressLint("Range") int taskType = cursor.getInt(cursor.getColumnIndex("taskType"));
                 @SuppressLint("Range") String name = cursor.getString(cursor.getColumnIndex("name"));
-                //  String description = cursor.getString(cursor.getColumnIndex("description"));
-//                Task task = new Task(TaskEnum.values()[taskEnumOrdinal], name);
-//                taskList.add(task);
+                  @SuppressLint("Range") String description = cursor.getString(cursor.getColumnIndex("description"));
+                Task task = new Task(name, description, taskType);
+                taskList.add(task);
             } while (cursor.moveToNext());
         }
         cursor.close();
