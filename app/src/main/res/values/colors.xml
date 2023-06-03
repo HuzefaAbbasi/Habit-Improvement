@@ -14,8 +14,8 @@
     // Base Colors (Shades of Black)
     <color name="base">#242424</color>
     <color name="primary">#262626</color>
-    <color name="secondary1">#121212</color>
-    <color name="secondary2">#1E1E1E</color>
+    <color name="prominent_boxes">#121212</color>
+    <color name="box_color">#1E1E1E</color>
     <color name="black">#000000</color>
 
     //Categories

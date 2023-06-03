@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -12,7 +13,9 @@ import androidx.annotation.Nullable;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 public class DBHelper extends SQLiteOpenHelper {
 
@@ -29,217 +32,461 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String create = "Create Table Task " +
+        String createTaskTable = "Create Table Task " +
                 "(name varchar(50) PRIMARY KEY, " +
                 "description varchar(2000)," +
                 "taskType int NOT NULl)";
 
 
-        String create1 = "Create Table SubTask (" +
-                "SubTaskName varchar(100) PRIMARY KEY," +
-                "Completed int," +
-                "FOREIGN KEY(name) REFERENCES Task(name)" +
-                ");"; //foriegn keys at end?
-
-
-        String create2 = "Create Table Schedule (" +
-                "Time TIME," +
-                "Date DATE," +
-                // "Random varchar(50)" +
-                "PRIMARY KEY(Time, Date)," +
-                "FOREIGN KEY(name) REFERENCES Task(name)" +
+        String createScheduleTable = "Create Table Schedule (" +
+                "startTime TIME," +
+                "endTime TIME," +
+                "date DATE," +
+                "taskName varchar(50) NOT NULL," +
+                "PRIMARY KEY(startTime, endTime ,date)," +
+                "FOREIGN KEY(taskName) REFERENCES Task(name)" +
                 ");";
 
-        String create3 = "Create Table Progress (" +
-                "Time TIME," +
-                "Date DATE," +
-                "name varchar(50)," +
-                "EnumEnergy int CONSTRAINT energy_check CHECK (EnumEnergy BETWEEN 0 AND 10)," +
-                "EnumFeeling int CONSTRAINT feeling_check CHECK (EnumFeeling BETWEEN 0 AND 10)," +
-                "PRIMARY KEY(Time, Date)," +
-                "FOREIGN KEY(name) REFERENCES Task(name)" +
-
-                // "EnumFeeling int" +
+        String createProgressTable = "Create Table Progress (" +
+                "startTime TIME," +
+                "endTime TIME," +
+                "date DATE," +
+                "taskName varchar(50) NOT NULL," +
+                "energy int CONSTRAINT energy CHECK (energy BETWEEN 1 AND 3)," +
+                "feeling int CONSTRAINT feeling CHECK (feeling BETWEEN 1 AND 5)," +
+                "PRIMARY KEY(startTime, endTime ,date)," +
+                "FOREIGN KEY(taskName) REFERENCES Task(name)" +
                 ");";
 
 
 
-        db.execSQL(create);
-        //  db.execSQL(create1);
-        //  db.execSQL(create2);
-        //db.execSQL(create3);
+        db.execSQL(createTaskTable);
+        db.execSQL(createScheduleTable);
+        db.execSQL(createProgressTable);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
+/*
         String drop = String.valueOf("DROP TABLE IF EXISTS");
         db.execSQL(drop, new String[]{"myUser"});
         onCreate(db);
+*/
     }
-
-    public void insertTask(Task task){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("taskType" , task.getTaskType());
-        values.put("name", task.getTaskName());
-        values.put("description", task.getTaskDescription());
-        long k = db.insert("Task", null,values);
-        Log.d("mytag", Long.toString(k));
-        db.close();
-    }
-
-    public void deleteTask(Task task) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-
-        String TaskName = String.valueOf(task.getTaskName());
-        String[] whereargs = {TaskName};
-        int k = db.delete("Task",
-                "name = ?",
-                whereargs);
-        Log.d("mtag1", Integer.toString(k));
-    }
-
-    public void updateTask(Task oldtask, Task newTask){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("name",newTask.getTaskName());
-        contentValues.put("description", newTask.getTaskDescription());
-        contentValues.put("taskType" , newTask.getTaskType());
-
-        String[] whereargs = {oldtask.getTaskName()};
-        int rowsUpdates = db.update("Task", contentValues,"name = ?", whereargs);
-        Log.d("myTag2", Integer.toString(rowsUpdates));
-    }
-
-    public ArrayList<Task> getTasks() {
-        ArrayList<Task> taskList = new ArrayList<>();
-        String selectQuery = "SELECT name, taskEnum FROM Task";
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        if (cursor.moveToFirst()) {
-            do {
-                @SuppressLint("Range") int taskEnumOrdinal = cursor.getInt(cursor.getColumnIndex("taskEnum"));
-                @SuppressLint("Range") String name = cursor.getString(cursor.getColumnIndex("name"));
-                //  String description = cursor.getString(cursor.getColumnIndex("description"));
-//                Task task = new Task(TaskEnum.values()[taskEnumOrdinal], name);
-//                taskList.add(task);
-            } while (cursor.moveToNext());
+    //Task Methods
+    public boolean insertTask(Task task){
+        try{
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put("taskType" , task.getTaskType());
+            values.put("name", task.getTaskName());
+            if (task.getTaskDescription() != null){
+                values.put("description", task.getTaskDescription());
+            }
+            long k = db.insert("Task", null,values);
+            db.close();
+            //implement this to insure integrity
+            if(k!=-1){
+                Log.d("insert schedule success", Long.toString(k));
+                return true;
+            }
+            else{
+                return false;
+            }
         }
-        cursor.close();
-        db.close();
-        return taskList;
+        catch (SQLException e){
+            Log.d("insert task Error", e.getMessage());
+            return false;
+        }
     }
 
+    public boolean deleteTask(String taskName) {
+        try{
+            SQLiteDatabase db = this.getWritableDatabase();
+            String[] whereArgs = {taskName};
+            long k = db.delete("Task",
+                    "name = ?",
+                    whereArgs);
+            db.close();
+            //implement this to insure integrity
+            if(k!=-1){
+                Log.d("delete task success", Long.toString(k));
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        catch (Exception e){
+            Log.d("delete task Error", e.getMessage());
+            return false;
+        }
+
+    }
+
+    public boolean updateTask(String oldTaskName, Task newTask){
+        try{
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("name", newTask.getTaskName());
+            contentValues.put("description", newTask.getTaskDescription());
+            contentValues.put("taskType" , newTask.getTaskType());
+            String[] whereArgs = {oldTaskName};
+            long k = db.update("Task", contentValues,"name = ?", whereArgs);
+            db.close();
+            //implement this to insure integrity
+            if(k!=-1){
+                Log.d("update task", Long.toString(k));
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        catch (Exception e){
+            Log.d("update task Error", e.getMessage());
+            return false;
+        }
+
+    }
+
+    public List<Task> getAllTasks() {
+        List<Task> taskList = new ArrayList<>();
+        try{
+            SQLiteDatabase db = this.getReadableDatabase();
+            String selectQuery = "SELECT * FROM Task";
+            Cursor cursor = db.rawQuery(selectQuery, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    @SuppressLint("Range") int taskType = cursor.getInt(cursor.getColumnIndex("taskType"));
+                    @SuppressLint("Range") String name = cursor.getString(cursor.getColumnIndex("name"));
+                    @SuppressLint("Range") String description = cursor.getString(cursor.getColumnIndex("description"));
+                    Task task = new Task(name, description, taskType);
+                    taskList.add(task);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            db.close();
+            Log.d("view task Error", "List successfully returned");
+            return taskList;
+        }
+        catch (Exception e){
+            Log.d("view task Error", e.getMessage());
+            return taskList;
+        }
+    }
+
+    public List<String> getAllTasksName(){
+        List<String> taskList = new ArrayList<>();
+        try{
+            SQLiteDatabase db = this.getReadableDatabase();
+            String selectQuery = "SELECT name FROM Task";
+            Cursor cursor = db.rawQuery(selectQuery, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    @SuppressLint("Range") String name = cursor.getString(cursor.getColumnIndex("name"));
+                    taskList.add(name);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            db.close();
+            Log.d("view task Error", "List successfully returned");
+            return taskList;
+        }
+        catch (Exception e){
+            Log.d("view task Error", e.getMessage());
+            return taskList;
+        }
+    }
     //For Schedule
+    public boolean insertSchedule(Schedule schedule){
+        try{
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            //getting date into format for insertion in db
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String formattedDate = schedule.getDate().format(dateFormatter);
 
-    /*
-       "Time TIME," +
-                "Date DATE," +
-               // "Random varchar(50)" +
-                "PRIMARY KEY(Time, Date)," +
-                "FOREIGN KEY(name) REFERENCES Task(name)" +
-                ");";
+            //getting time into format for insertion in db
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-        String create3 = "Create Table Progress (" +
-                "Time TIME," +
-                "Date DATE," +
-                "name varchar(50)," +
-                "Energy int CONSTRAINT energy_check CHECK (EnumEnergy BETWEEN 0 AND 10)," +
-                "EnumFeeling int CONSTRAINT feeling_check CHECK (EnumFeeling BETWEEN 0 AND 10)," +
-                "PRIMARY KEY(Time, Date)," +
-                "FOREIGN KEY(name) REFERENCES Task(name)" +
+            String formattedStartTime = schedule.getStartTime().format(timeFormatter);
+            String formattedEndTime = schedule.getStartTime().format(timeFormatter);
 
-
-
-    public void insertRoutine(Task task, LocalDate localDate, LocalTime localTime){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("name", task.getName());
-        values.put("Date", String.valueOf(localDate));
-        values.put("Time", String.valueOf(localTime));
-        long k = db.insert("Schedule", null,values);
-        Log.d("mytag11", Long.toString(k));
-        db.close();
+            values.put("taskName", schedule.getTask().getTaskName());
+            values.put("date", formattedDate);
+            values.put("startTime", formattedStartTime);
+            values.put("endTime",formattedEndTime);
+            long k = db.insert("Schedule", null, values);
+            db.close();
+            //implement this to insure integrity
+            if(k!=-1){
+                Log.d("insert schedule success", Long.toString(k));
+                return true;
+            }
+            else{
+              return false;
+            }
+        }
+        catch (Exception e){
+            Log.d("insert schedule failed", e.getMessage());
+            return false;
+        }
     }
 
-    public void deleteRoutine(Task task, LocalDate localDate, LocalTime localTime) {
-        SQLiteDatabase db = this.getWritableDatabase();
 
+    public boolean deleteSchedule(LocalDate date, LocalTime startTime, LocalTime endTime ) {
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            String dateStr = String.valueOf(date);
+            String startTimeStr = String.valueOf(startTime);
+            String endTimeStr = String.valueOf(endTime);
+            String[] whereArgs = {dateStr,startTimeStr ,endTimeStr };
 
-        String TaskName = String.valueOf(task.getName());
-        String Date = String.valueOf(localDate);
-        String Time = String.valueOf(localTime);
-        String[] whereargs = {TaskName, Date, Time};
-       // String[] whereargs2 = {Date};
-       // String[] whereargs3 = {Time};
+            long k = db.delete("Schedule",
+                    "date = ? AND startTime = ? AND endTime = ?",
+                    whereArgs);
+            db.close();
+            //implement this to insure integrity
+            if(k!=-1){
+                Log.d("delete Schedule Success", Long.toString(k));
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        catch (Exception e){
+            Log.d("delete Schedule failed", e.getMessage());
+            return false;
+        }
+    }
+    // work needed
+    public boolean updateSchedule(LocalDate date, LocalTime startTime, LocalTime endTime, Schedule schedule){
+        try{
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put("taskName", schedule.getTask().getTaskName());
+            values.put("date", String.valueOf(schedule.getDate()));
+            values.put("startTime", String.valueOf(schedule.getStartTime()));
+            values.put("endTime", String.valueOf(schedule.getEndTime()));
 
-        int k = db.delete("Schedule",
-                "name = ? AND Date = ? AND Time = ?",
-                whereargs);
-        Log.d("mtag12", Integer.toString(k));
+            String dateStr = String.valueOf(date);
+            String startTimeStr = String.valueOf(startTime);
+            String endTimeStr = String.valueOf(endTime);
+            String[] whereArgs = {dateStr,startTimeStr ,endTimeStr };
+
+            long k = db.update("Schedule", values,
+                    "name = ? AND Date = ? AND Time = ?",
+                    whereArgs);
+            //implement this to insure integrity
+            if(k!=-1){
+                Log.d("update Schedule success", Long.toString(k));
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        catch (Exception e){
+            Log.d("update Schedule failed", e.getMessage());
+            return false;
+        }
     }
 
-    public void updateRoutine(Task oldTask, Task newTask, LocalDate oldLocalDate, LocalDate newLocaLdate, LocalTime oldLocalTime, LocalTime newLocalTime){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("name",newTask.getName());
-        contentValues.put("Date",String.valueOf(newLocaLdate));
-        contentValues.put("Time", String.valueOf(newLocalTime));
 
-        String[] whereargs = {oldTask.getName(), String.valueOf(oldLocalDate), String.valueOf(oldLocalTime)};
-        int rowsUpdates = db.update("Schedule", contentValues,
-                "name = ? AND Date = ? AND Time = ?",
-                whereargs);
-        Log.d("myTag13", Integer.toString(rowsUpdates));
+
+    //returns list of schedules for provided date
+    public List<Schedule> getAllScheduleForDate(LocalDate date) {
+        List<Schedule> scheduleList = new ArrayList<>();
+        try{
+            SQLiteDatabase db = this.getReadableDatabase();
+            String dateStr = String.valueOf(date);
+            String selectQuerySchedule = "SELECT * FROM Schedule WHERE date = ?";
+            Cursor cursor = db.rawQuery(selectQuerySchedule, new String[]{dateStr});
+
+            if (cursor.moveToFirst()) {
+                do {
+                    @SuppressLint("Range") String taskNameSchedule = cursor.getString(cursor.getColumnIndex("taskName"));
+                    @SuppressLint("Range") String dateS = cursor.getString(cursor.getColumnIndex("date"));
+                    @SuppressLint("Range") String startTime = cursor.getString(cursor.getColumnIndex("startTime"));
+                    @SuppressLint("Range") String endTime = cursor.getString(cursor.getColumnIndex("endTime"));
+                    String selectQueryTask = "SELECT * FROM Task WHERE name = ?";
+                    Cursor cursorTask = db.rawQuery(selectQueryTask, new String[]{taskNameSchedule});
+                    if(cursorTask.moveToFirst()){
+                        @SuppressLint("Range") String taskName = cursorTask.getString(cursorTask.getColumnIndex("name"));
+                        @SuppressLint("Range") String taskDescription = cursorTask.getString(cursorTask.getColumnIndex("description"));
+                        @SuppressLint("Range") int taskType = cursorTask.getInt(cursorTask.getColumnIndex("taskType"));
+
+                        //Converting date and time to LocalDate and LocalTime
+                        DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                        LocalDate localDate = LocalDate.parse(dateS, formatterDate);
+
+                        DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm:ss");
+                        LocalTime localStartTime = LocalTime.parse(startTime, formatterTime);
+                        LocalTime localEndTime = LocalTime.parse(endTime, formatterTime);
+
+                        //Creating task object to pass to schedule as parameter
+                        Task task = new Task(taskName, taskDescription,taskType);
+                        Schedule schedule = new Schedule(localDate, localStartTime, localEndTime, task);
+                        scheduleList.add(schedule);
+                    }
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            db.close();
+            Log.d("view schedule", "List successfully returned");
+            return scheduleList;
+        }
+        catch (Exception e){
+            Log.d("view schedule Error", e.getMessage());
+            return scheduleList;
+        }
     }
-
 
 
 //-------------------------
-
-    public void insertRoutine(Task task, LocalDate localDate, LocalTime localTime){
-    SQLiteDatabase db = this.getWritableDatabase();
-    ContentValues values = new ContentValues();
-    values.put("name", task.getName());
-    values.put("Date", String.valueOf(localDate));
-    values.put("Time", String.valueOf(localTime));
-    long k = db.insert("Schedule", null,values);
-    Log.d("mytag21", Long.toString(k));
-    db.close();
-}
-
-    public void deleteRoutine(Task task, LocalDate localDate, LocalTime localTime) {
-        SQLiteDatabase db = this.getWritableDatabase();
+    // For Progress
 
 
-        String TaskName = String.valueOf(task.getName());
-        String Date = String.valueOf(localDate);
-        String Time = String.valueOf(localTime);
-        String[] whereargs = {TaskName, Date, Time};
-        // String[] whereargs2 = {Date};
-        // String[] whereargs3 = {Time};
-
-        int k = db.delete("Schedule",
-                "name = ? AND Date = ? AND Time = ?",
-                whereargs);
-        Log.d("mtag22", Integer.toString(k));
+    public boolean insertProgress(Progress progress){
+        try{
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put("taskName", progress.getTask().getTaskName());
+            values.put("date", String.valueOf(progress.getDate()));
+            values.put("startTime", String.valueOf(progress.getStartTime()));
+            values.put("endTime", String.valueOf(progress.getEndTime()));
+            values.put("energy", String.valueOf(progress.getEnergy()));
+            values.put("feeling", String.valueOf(progress.getFeeling()));
+            long k = db.insert("Progress", null, values);
+            db.close();
+            //implement this to insure integrity
+            if(k!=-1){
+                Log.d("insert progress success", Long.toString(k));
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        catch (Exception e){
+            Log.d("insert progress failed", e.getMessage());
+            return false;
+        }
     }
 
-    public void updateRoutine(Task oldTask, Task newTask, LocalDate oldLocalDate, LocalDate newLocaLdate, LocalTime oldLocalTime, LocalTime newLocalTime){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("name",newTask.getName());
-        contentValues.put("Date",String.valueOf(newLocaLdate));
-        contentValues.put("Time", String.valueOf(newLocalTime));
+    public boolean deleteProgress(LocalDate date, LocalTime startTime, LocalTime endTime) {
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            String dateStr = String.valueOf(date);
+            String startTimeStr = String.valueOf(startTime);
+            String endTimeStr = String.valueOf(endTime);
+            String[] whereArgs = {dateStr,startTimeStr ,endTimeStr };
 
-        String[] whereargs = {oldTask.getName(), String.valueOf(oldLocalDate), String.valueOf(oldLocalTime)};
-        int rowsUpdates = db.update("Schedule", contentValues,
-                "name = ? AND Date = ? AND Time = ?",
-                whereargs);
-        Log.d("myTag23", Integer.toString(rowsUpdates));
+            long k = db.delete("Progress",
+                    "date = ? AND startTime = ? AND endTime = ?",
+                    whereArgs);
+            db.close();
+            //implement this to insure integrity
+            if(k!=-1){
+                Log.d("delete Progress Success", Long.toString(k));
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        catch (Exception e){
+            Log.d("delete Progress failed", e.getMessage());
+            return false;
+        }
     }
 
+    public boolean updateProgress(LocalDate date, LocalTime startTime, LocalTime endTime, Progress progress){
+        try{
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put("taskName", progress.getTask().getTaskName());
+            values.put("date", String.valueOf(progress.getDate()));
+            values.put("startTime", String.valueOf(progress.getStartTime()));
+            values.put("endTime", String.valueOf(progress.getEndTime()));
+            values.put("energy", String.valueOf(progress.getEnergy()));
+            values.put("feeling", String.valueOf(progress.getFeeling()));
+
+            String dateStr = String.valueOf(date);
+            String startTimeStr = String.valueOf(startTime);
+            String endTimeStr = String.valueOf(endTime);
+            String[] whereArgs = {dateStr,startTimeStr ,endTimeStr };
+
+            long k = db.update("Progress", values,
+                    "name = ? AND Date = ? AND Time = ?",
+                    whereArgs);
+            //implement this to insure integrity
+            if(k!=-1){
+                Log.d("update Progress success", Long.toString(k));
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        catch (Exception e){
+            Log.d("update Progress failed", e.getMessage());
+            return false;
+        }
+    }
+
+    //returns list of schedules for provided date
+    public List<Progress> getAllProgressForDate(LocalDate date) {
+        List<Progress> progressList = new ArrayList<>();
+        try{
+            SQLiteDatabase db = this.getReadableDatabase();
+            String dateStr = String.valueOf(date);
+            String selectQuerySchedule = "SELECT * FROM Progress WHERE date = ?";
+            Cursor cursor = db.rawQuery(selectQuerySchedule, new String[]{dateStr});
+
+            if (cursor.moveToFirst()) {
+                do {
+                    @SuppressLint("Range") String taskNameProgress = cursor.getString(cursor.getColumnIndex("taskName"));
+                    @SuppressLint("Range") String dateS = cursor.getString(cursor.getColumnIndex("date"));
+                    @SuppressLint("Range") String startTime = cursor.getString(cursor.getColumnIndex("startTime"));
+                    @SuppressLint("Range") String endTime = cursor.getString(cursor.getColumnIndex("endTime"));
+                    @SuppressLint("Range") int energy = cursor.getInt(cursor.getColumnIndex("energy"));
+                    @SuppressLint("Range") int feeling = cursor.getInt(cursor.getColumnIndex("feeling"));
+
+                    String selectQueryTask = "SELECT * FROM Task WHERE name = ?";
+                    Cursor cursorTask = db.rawQuery(selectQueryTask, new String[]{taskNameProgress});
+                    if(cursorTask.moveToFirst()){
+                        @SuppressLint("Range") String taskName = cursorTask.getString(cursorTask.getColumnIndex("name"));
+                        @SuppressLint("Range") String taskDescription = cursorTask.getString(cursorTask.getColumnIndex("description"));
+                        @SuppressLint("Range") int taskType = cursorTask.getInt(cursorTask.getColumnIndex("taskType"));
+
+                        //Converting date and time to LocalDate and LocalTime
+                        DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                        LocalDate localDate = LocalDate.parse(dateS, formatterDate);
+
+                        DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm:ss");
+                        LocalTime localStartTime = LocalTime.parse(startTime, formatterTime);
+                        LocalTime localEndTime = LocalTime.parse(endTime, formatterTime);
+
+                        //Creating task object to pass to schedule as parameter
+                        Task task = new Task(taskName, taskDescription,taskType);
+                        Progress progress = new Progress(localDate, localStartTime, localEndTime, task ,energy, feeling);
+                        progressList.add(progress);
+                    }
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            db.close();
+            Log.d("view progress", "List successfully returned");
+            return progressList;
+        }
+        catch (Exception e){
+            Log.d("view progress Error", e.getMessage());
+            return progressList;
+        }
+    }
 
   /*  public void addUser(User user){
         SQLiteDatabase db = this.getWritableDatabase();

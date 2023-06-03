@@ -13,15 +13,24 @@
         android:theme="@style/Theme.RoutinePlanningSystem"
         tools:targetApi="31">
         <activity
+            android:name=".AddProgress"
+            android:exported="false" />
+        <activity
+            android:name=".AddSchedule"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".AddTask"
             android:exported="true">
             <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-
-            <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-         </activity>
-
+        </activity>
     </application>
 
 </manifest>

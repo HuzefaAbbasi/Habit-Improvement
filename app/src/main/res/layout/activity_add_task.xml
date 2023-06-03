@@ -42,7 +42,7 @@
         android:id="@+id/nameBox"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/secondary2"
+        android:background="@color/box_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -253,7 +253,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
-            android:id="@+id/button11"
+            android:id="@+id/menuTaskButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginStart="28dp"
@@ -263,7 +263,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/button12"
+            android:id="@+id/menuReportButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginEnd="28dp"
@@ -273,24 +273,24 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/button13"
+            android:id="@+id/menuScheduleButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@drawable/schedule"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/button10"
+            app:layout_constraintEnd_toStartOf="@+id/menuProgressButton"
             app:layout_constraintHorizontal_bias="0.458"
-            app:layout_constraintStart_toEndOf="@+id/button11"
+            app:layout_constraintStart_toEndOf="@+id/menuTaskButton"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/button10"
+            android:id="@+id/menuProgressButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginEnd="44dp"
             android:background="@drawable/progress"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/button12"
+            app:layout_constraintEnd_toStartOf="@+id/menuReportButton"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
