@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout9"
         android:layout_width="match_parent"
-        android:layout_height="715dp"
+        android:layout_height="700dp"
         android:layout_marginTop="100dp"
         android:background="@drawable/mainbox"
         android:elevation="8dp"
@@ -62,16 +62,16 @@
                 android:background="@drawable/feeling"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.666"
                 app:layout_constraintStart_toEndOf="@+id/spinner"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.533" />
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Button
-            android:id="@+id/addScheduleButton"
+            android:id="@+id/addProgressButton"
             android:layout_width="160dp"
             android:layout_height="50dp"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/addtaskbutton"
             android:elevation="12dp"
             android:gravity="center_horizontal|center_vertical"
@@ -89,11 +89,11 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:elevation="20dp"
-            app:layout_constraintBottom_toBottomOf="@+id/addScheduleButton"
-            app:layout_constraintEnd_toEndOf="@+id/addScheduleButton"
+            app:layout_constraintBottom_toBottomOf="@+id/addProgressButton"
+            app:layout_constraintEnd_toEndOf="@+id/addProgressButton"
             app:layout_constraintHorizontal_bias="0.107"
-            app:layout_constraintStart_toStartOf="@+id/addScheduleButton"
-            app:layout_constraintTop_toTopOf="@+id/addScheduleButton"
+            app:layout_constraintStart_toStartOf="@+id/addProgressButton"
+            app:layout_constraintTop_toTopOf="@+id/addProgressButton"
             app:layout_constraintVertical_bias="0.533"
             app:srcCompat="@drawable/plusicon" />
 
@@ -107,7 +107,7 @@
             android:translationZ="-2dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addScheduleButton"
+            app:layout_constraintTop_toBottomOf="@+id/addProgressButton"
             app:layout_constraintVertical_bias="1.0">
 
             <Button
@@ -182,7 +182,7 @@
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="52dp"
-                android:text="30 min"
+                android:text="0 min"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/durationTag"
@@ -195,10 +195,9 @@
                 android:background="@drawable/minus_circle"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.543"
+                app:layout_constraintHorizontal_bias="0.627"
                 app:layout_constraintStart_toEndOf="@+id/durationTextView"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.466" />
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -230,7 +229,7 @@
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="76dp"
-                android:text="12:00:00 PM"
+                android:text="Select Time"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/startTag"
@@ -243,10 +242,9 @@
                 android:background="@drawable/clock"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.561"
+                app:layout_constraintHorizontal_bias="0.644"
                 app:layout_constraintStart_toEndOf="@+id/startTextView"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.533" />
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -273,29 +271,28 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/taskTextView"
+            <AutoCompleteTextView
+                android:id="@+id/taskAutoTextView"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="76dp"
-                android:text="May 30, 23"
+                android:hint="Enter Task"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/taskTag"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.487" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <Button
                 android:id="@+id/taskSelectButton"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:layout_marginEnd="4dp"
                 android:background="@drawable/right_arrow"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.543"
-                app:layout_constraintStart_toEndOf="@+id/taskTextView"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.533" />
+                app:layout_constraintHorizontal_bias="0.707"
+                app:layout_constraintStart_toEndOf="@+id/taskAutoTextView"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -328,7 +325,7 @@
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="76dp"
-                android:text="May 30, 23"
+                android:text="Select Date"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/dateTag"
@@ -341,10 +338,9 @@
                 android:background="@drawable/schedule"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.561"
+                app:layout_constraintHorizontal_bias="0.627"
                 app:layout_constraintStart_toEndOf="@+id/dateTextView"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.466" />
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -489,12 +485,13 @@
                 android:id="@+id/energyButton"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:background="@drawable/right_arrow"
+                android:background="@drawable/energy_icon"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.659"
                 app:layout_constraintStart_toEndOf="@+id/spinner2"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.533" />
+                app:layout_constraintVertical_bias="0.478" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 

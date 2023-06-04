@@ -46,7 +46,6 @@ public class AddSchedule extends AppCompatActivity {
         setContentView(R.layout.activity_add_schedule);
 
 
-
         calendarButton = findViewById(R.id.calendarButton);
         clockButton = findViewById(R.id.clockButton);
         taskSelectButton = findViewById(R.id.taskSelectButton);
@@ -57,7 +56,7 @@ public class AddSchedule extends AppCompatActivity {
         plus60Button = findViewById(R.id.plus60Button);
         removeDuration = findViewById(R.id.removeDurationButton);
 
-        addSchedule = findViewById(R.id.addScheduleButton);
+        addSchedule = findViewById(R.id.addProgressButton);
 
         durationTextView = findViewById(R.id.durationTextView);
         dateTextView = findViewById(R.id.dateTextView);
@@ -66,6 +65,7 @@ public class AddSchedule extends AppCompatActivity {
         taskAutoComplete = findViewById(R.id.taskAutoTextView);
         DBHelper dbHelper = new DBHelper(this, "habit",null, 1);
 
+        List<Schedule> list = dbHelper.getAllScheduleForDate(LocalDate.of(2023,5,4));
 //        dbHelper.insertTask(new Task("Project",null, 5));
 //        dbHelper.insertTask(new Task("Android",null, 1));
 //        dbHelper.insertTask(new Task("Sleep",null, 4));
@@ -156,7 +156,7 @@ public class AddSchedule extends AppCompatActivity {
                                 String selectedDate = dayOfMonth + "/ " + (month + 1) + "/ " + year;
                                 dateTextView = findViewById(R.id.dateTextView);
                                 dateTextView.setText(selectedDate);
-                                date = LocalDate.of(year, month, dayOfMonth);
+                                date = LocalDate.of(year, month+1, dayOfMonth);
                                 dateCheck = true;
                             }
                         }, year, month, dayOfMonth);

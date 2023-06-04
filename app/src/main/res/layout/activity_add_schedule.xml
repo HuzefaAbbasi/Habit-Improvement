@@ -23,7 +23,7 @@
         app:layout_constraintVertical_bias="1.0">
 
         <Button
-            android:id="@+id/addScheduleButton"
+            android:id="@+id/addProgressButton"
             android:layout_width="160dp"
             android:layout_height="50dp"
             android:layout_marginTop="40dp"
@@ -44,11 +44,11 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:elevation="20dp"
-            app:layout_constraintBottom_toBottomOf="@+id/addScheduleButton"
-            app:layout_constraintEnd_toEndOf="@+id/addScheduleButton"
+            app:layout_constraintBottom_toBottomOf="@+id/addProgressButton"
+            app:layout_constraintEnd_toEndOf="@+id/addProgressButton"
             app:layout_constraintHorizontal_bias="0.135"
-            app:layout_constraintStart_toStartOf="@+id/addScheduleButton"
-            app:layout_constraintTop_toTopOf="@+id/addScheduleButton"
+            app:layout_constraintStart_toStartOf="@+id/addProgressButton"
+            app:layout_constraintTop_toTopOf="@+id/addProgressButton"
             app:layout_constraintVertical_bias="0.533"
             app:srcCompat="@drawable/plusicon" />
 
@@ -62,7 +62,7 @@
             android:translationZ="-2dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addScheduleButton"
+            app:layout_constraintTop_toBottomOf="@+id/addProgressButton"
             app:layout_constraintVertical_bias="0.877">
 
             <Button

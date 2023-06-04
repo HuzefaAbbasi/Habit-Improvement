@@ -190,7 +190,7 @@ public class DBHelper extends SQLiteOpenHelper {
             }
             cursor.close();
             db.close();
-            Log.d("view task Error", "List successfully returned");
+            Log.d("view task Success", "List successfully returned");
             return taskList;
         }
         catch (Exception e){
@@ -206,12 +206,13 @@ public class DBHelper extends SQLiteOpenHelper {
             //getting date into format for insertion in db
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String formattedDate = schedule.getDate().format(dateFormatter);
+            Log.d("insert date", formattedDate);
 
             //getting time into format for insertion in db
             DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
             String formattedStartTime = schedule.getStartTime().format(timeFormatter);
-            String formattedEndTime = schedule.getStartTime().format(timeFormatter);
+            String formattedEndTime = schedule.getEndTime().format(timeFormatter);
 
             values.put("taskName", schedule.getTask().getTaskName());
             values.put("date", formattedDate);
@@ -301,12 +302,19 @@ public class DBHelper extends SQLiteOpenHelper {
         List<Schedule> scheduleList = new ArrayList<>();
         try{
             SQLiteDatabase db = this.getReadableDatabase();
-            String dateStr = String.valueOf(date);
+
+            //getting date into format for insertion in db
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String formattedDate = date.format(dateFormatter);
+            String dateStr = String.valueOf(formattedDate);
+
+            Log.d("DateStr", dateStr);
             String selectQuerySchedule = "SELECT * FROM Schedule WHERE date = ?";
             Cursor cursor = db.rawQuery(selectQuerySchedule, new String[]{dateStr});
 
             if (cursor.moveToFirst()) {
                 do {
+                    Log.d("Schedule", "Cursormoved: ");
                     @SuppressLint("Range") String taskNameSchedule = cursor.getString(cursor.getColumnIndex("taskName"));
                     @SuppressLint("Range") String dateS = cursor.getString(cursor.getColumnIndex("date"));
                     @SuppressLint("Range") String startTime = cursor.getString(cursor.getColumnIndex("startTime"));
@@ -314,6 +322,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     String selectQueryTask = "SELECT * FROM Task WHERE name = ?";
                     Cursor cursorTask = db.rawQuery(selectQueryTask, new String[]{taskNameSchedule});
                     if(cursorTask.moveToFirst()){
+                        Log.d("Task", "Cursormoved: ");
                         @SuppressLint("Range") String taskName = cursorTask.getString(cursorTask.getColumnIndex("name"));
                         @SuppressLint("Range") String taskDescription = cursorTask.getString(cursorTask.getColumnIndex("description"));
                         @SuppressLint("Range") int taskType = cursorTask.getInt(cursorTask.getColumnIndex("taskType"));
@@ -353,12 +362,23 @@ public class DBHelper extends SQLiteOpenHelper {
         try{
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues values = new ContentValues();
+            //getting date into format for insertion in db
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String formattedDate = progress.getDate().format(dateFormatter);
+            Log.d("insert date", formattedDate);
+
+            //getting time into format for insertion in db
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+
+            String formattedStartTime = progress.getStartTime().format(timeFormatter);
+            String formattedEndTime = progress.getEndTime().format(timeFormatter);
+
             values.put("taskName", progress.getTask().getTaskName());
-            values.put("date", String.valueOf(progress.getDate()));
-            values.put("startTime", String.valueOf(progress.getStartTime()));
-            values.put("endTime", String.valueOf(progress.getEndTime()));
-            values.put("energy", String.valueOf(progress.getEnergy()));
-            values.put("feeling", String.valueOf(progress.getFeeling()));
+            values.put("date", formattedDate);
+            values.put("startTime",formattedStartTime);
+            values.put("endTime", formattedEndTime);
+            values.put("energy", progress.getEnergy());
+            values.put("feeling", progress.getFeeling());
             long k = db.insert("Progress", null, values);
             db.close();
             //implement this to insure integrity
