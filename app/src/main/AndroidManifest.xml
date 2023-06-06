@@ -12,11 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RoutinePlanningSystem"
         tools:targetApi="31">
+
         <activity
-            android:name=".AddTask"
-            android:exported="false" />
-        <activity
-            android:name=".TaskList"
+            android:name=".ProgressTabLayOutView"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

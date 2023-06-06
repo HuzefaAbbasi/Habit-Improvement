@@ -3,20 +3,15 @@ package com.example.routineplanningsystem;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class TaskList extends AppCompatActivity {
     private RecyclerView recyclerView;
-    private RecyclerViewAdapter recyclerViewAdapter;
+    private RecyclerViewAdapterTask recyclerViewAdapterTask;
     private ArrayList<Task> taskArrayList;
     private ArrayAdapter<String> arrayAdapter;
 
@@ -43,8 +38,8 @@ public class TaskList extends AppCompatActivity {
             taskArrayList.add(task);
         }
 //for the recycleViewAdapter
-        recyclerViewAdapter = new RecyclerViewAdapter(TaskList.this,taskArrayList);
-        recyclerView.setAdapter(recyclerViewAdapter);
+        recyclerViewAdapterTask = new RecyclerViewAdapterTask(TaskList.this,taskArrayList);
+        recyclerView.setAdapter(recyclerViewAdapterTask);
 
 
     }
