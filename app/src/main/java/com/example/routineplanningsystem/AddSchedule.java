@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -38,6 +39,7 @@ public class AddSchedule extends AppCompatActivity {
     Button addSchedule;
     boolean dateCheck = false, taskCheck = false, startTimeCheck = false;
     LocalTime startTime;
+    LocalTime endTime;
     LocalDate date;
     Task selectedTask;
     @Override
@@ -262,37 +264,48 @@ public class AddSchedule extends AppCompatActivity {
                         break;
                     }
                 }
+
+                endTime = startTime.plusMinutes(duration);
+                boolean checkDuration = dbHelper.checkDate("Schedule",date,startTime,endTime);
+                Log.d("checkDuration", "Check: "+checkDuration);
+
+
                 //Verifying all data is given properly
                 if (dateCheck){
                     if (!TextUtils.isEmpty(taskAutoComplete.getText())){
                         if (taskCheck){
                             if (startTimeCheck){
                                 if (duration > 0 && duration <= 600) {
-                                    // code to add Schedule
-                                    LocalTime endTime = startTime.plusMinutes(duration);
-                                    //Selecting task which has entered task name
-                                    for (Task task: taskList){
-                                        String str = task.getTaskName().trim().toLowerCase();
-                                        if(enteredTask.equals(str)){
-                                            selectedTask = task;
-                                            break;
+                                    if (checkDuration){
+                                        // code to add Schedule
+                                        endTime = startTime.plusMinutes(duration);
+                                        //Selecting task which has entered task name
+                                        for (Task task: taskList){
+                                            String str = task.getTaskName().trim().toLowerCase();
+                                            if(enteredTask.equals(str)){
+                                                selectedTask = task;
+                                                break;
+                                            }
+                                        }
+
+                                        Schedule schedule = new Schedule(date, startTime, endTime, selectedTask);
+                                        boolean success = dbHelper.insertSchedule(schedule);
+
+                                        if (success){
+                                            Toast.makeText(AddSchedule.this, "Added Successfully", Toast.LENGTH_SHORT).show();
+                                            dateTextView.setText("Select Date");
+                                            startTimeTextView.setText("Select Time");
+                                            durationTextView.setText("0 min");
+                                            taskAutoComplete.setText(null);
+                                            duration = 0;
+                                            durationStack.clear();
+                                        }
+                                        else {
+                                            Toast.makeText(AddSchedule.this, "Schedule Adding Failed", Toast.LENGTH_SHORT).show();
                                         }
                                     }
-
-                                    Schedule schedule = new Schedule(date, startTime, endTime, selectedTask);
-                                    boolean success = dbHelper.insertSchedule(schedule);
-
-                                    if (success){
-                                        Toast.makeText(AddSchedule.this, "Added Successfully", Toast.LENGTH_SHORT).show();
-                                        dateTextView.setText("Select Date");
-                                        startTimeTextView.setText("Select Time");
-                                        durationTextView.setText("0 min");
-                                        taskAutoComplete.setText(null);
-                                        duration = 0;
-                                        durationStack.clear();
-                                    }
-                                    else {
-                                        Toast.makeText(AddSchedule.this, "Schedule Adding Failed", Toast.LENGTH_SHORT).show();
+                                    else{
+                                        Toast.makeText(AddSchedule.this, "Schedule already Exists", Toast.LENGTH_SHORT).show();
                                     }
 
                                 } else{

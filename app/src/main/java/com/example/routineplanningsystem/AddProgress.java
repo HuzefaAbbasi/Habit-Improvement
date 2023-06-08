@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -40,6 +41,7 @@ public class AddProgress extends AppCompatActivity {
     Button addProgress, feelingButton, energyButton;
     boolean dateCheck = false, taskCheck = false, startTimeCheck = false;
     LocalTime startTime;
+    LocalTime endTime;
     LocalDate date;
     Task selectedTask;
     int feelingValue = -1;
@@ -328,6 +330,7 @@ public class AddProgress extends AppCompatActivity {
 
 
 
+
         addProgress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -340,6 +343,11 @@ public class AddProgress extends AppCompatActivity {
                         break;
                     }
                 }
+
+                endTime = startTime.plusMinutes(duration);
+                boolean checkDuration = dbHelper.checkDate("Progress",date,startTime,endTime);
+                Log.d("checkDuration", "Check: "+checkDuration);
+
                 //Verifying all data is given properly
                 if (dateCheck){
                     if (!TextUtils.isEmpty(taskAutoComplete.getText())){
@@ -348,34 +356,39 @@ public class AddProgress extends AppCompatActivity {
                                 if (energyValue >= 0){
                                     if (startTimeCheck){
                                         if (duration > 0 && duration <= 600) {
-                                            // code to add Schedule
-                                            LocalTime endTime = startTime.plusMinutes(duration);
-                                            //Selecting task which has entered task name
-                                            for (Task task: taskList){
-                                                String str = task.getTaskName().trim().toLowerCase();
-                                                if(enteredTask.equals(str)){
-                                                    selectedTask = task;
-                                                    break;
+                                            if(checkDuration){
+                                                // code to add Schedule
+                                                endTime = startTime.plusMinutes(duration);
+                                                //Selecting task which has entered task name
+                                                for (Task task: taskList){
+                                                    String str = task.getTaskName().trim().toLowerCase();
+                                                    if(enteredTask.equals(str)){
+                                                        selectedTask = task;
+                                                        break;
+                                                    }
+                                                }
+
+                                                Progress progress = new Progress(date, startTime, endTime, selectedTask,
+                                                        energyValue+1, feelingValue+1);
+                                                boolean success = dbHelper.insertProgress(progress);
+
+                                                if (success){
+                                                    Toast.makeText(AddProgress.this, "Added Successfully", Toast.LENGTH_SHORT).show();
+                                                    dateTextView.setText("Select Date");
+                                                    startTimeTextView.setText("Select Time");
+                                                    durationTextView.setText("0 min");
+                                                    taskAutoComplete.setText(null);
+                                                    feelingSpinner.setSelection(0);
+                                                    energySpinner.setSelection(0);
+                                                    duration = 0;
+                                                    durationStack.clear();
+                                                }
+                                                else {
+                                                    Toast.makeText(AddProgress.this, "Progress Adding Failed", Toast.LENGTH_SHORT).show();
                                                 }
                                             }
-
-                                            Progress progress = new Progress(date, startTime, endTime, selectedTask,
-                                                    energyValue+1, feelingValue+1);
-                                            boolean success = dbHelper.insertProgress(progress);
-
-                                            if (success){
-                                                Toast.makeText(AddProgress.this, "Added Successfully", Toast.LENGTH_SHORT).show();
-                                                dateTextView.setText("Select Date");
-                                                startTimeTextView.setText("Select Time");
-                                                durationTextView.setText("0 min");
-                                                taskAutoComplete.setText(null);
-                                                feelingSpinner.setSelection(0);
-                                                energySpinner.setSelection(0);
-                                                duration = 0;
-                                                durationStack.clear();
-                                            }
-                                            else {
-                                                Toast.makeText(AddProgress.this, "Schedule Adding Failed", Toast.LENGTH_SHORT).show();
+                                            else{
+                                                Toast.makeText(AddProgress.this, "Progress already Exists", Toast.LENGTH_SHORT).show();
                                             }
 
                                         } else{
