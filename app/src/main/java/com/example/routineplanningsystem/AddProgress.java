@@ -240,6 +240,7 @@ public class AddProgress extends AppCompatActivity {
                                 startTimeTextView = findViewById(R.id.startTextView);
                                 startTimeTextView.setText(selectedTime);
                                 startTime = LocalTime.of(hourOfDay, minute);
+                                Log.d("StartTime","Time: "+ startTime);
                                 startTimeCheck = true;
                             }
                         }, hour, minute, false); // Use false for 12-hour format or true for 24-hour format

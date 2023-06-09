@@ -569,32 +569,43 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public List<DurationList> getWeekData(String tableName){
+
+    //Reports
+    public List<DurationList> getWeekOrMonthData(String tableName, String timeSpan){
         List<DurationList> listWithDate = new ArrayList<>();
-        List<DurationType> durationList = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
 
         // Get the current date
         LocalDate currentDate = LocalDate.now();
+        LocalDate startDate;
 
-        // Get the date of the week before
-        LocalDate weekBeforeDate = currentDate.minusWeeks(1);
+        if (timeSpan.equalsIgnoreCase("Week")){
+            // Get the date of the week before
+            startDate = currentDate.minusWeeks(1);
+        } else if (timeSpan.equalsIgnoreCase("Month")) {
+            // Get the date of the month before
+            startDate = currentDate.minusMonths(1);
+        }
+        else{
+            startDate = null;
+            Log.d("Time Span", "Wrong Time Span entered ");
+        }
 
-        //getting dates into format for insertion in db
+
+        //getting dates into format for selection from db
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String formattedCurrentDate = currentDate.format(dateFormatter);
-        String formattedWeekBeforeDate = weekBeforeDate.format(dateFormatter);
+        String formattedStartDate = startDate.format(dateFormatter);
 
-        String selectQuerySchedule = "SELECT n.date, n.startTime, n.endTime, t.name, t.taskType FROM " + tableName +
+        String selectQuerySchedule = "SELECT n.date, n.startTime, n.endTime, t.taskType FROM " + tableName +
                 "n join Task t on n.taskName = t.name  WHERE date >= ? AND date <= ?";
-        Cursor cursor = db.rawQuery(selectQuerySchedule, new String[]{formattedWeekBeforeDate, formattedCurrentDate});
+        Cursor cursor = db.rawQuery(selectQuerySchedule, new String[]{formattedStartDate, formattedCurrentDate});
         if (cursor.moveToFirst()){
             do{
                 @SuppressLint("Range") String dateS = cursor.getString(cursor.getColumnIndex("n.date"));
                 @SuppressLint("Range") String startTime = cursor.getString(cursor.getColumnIndex("n.startTime"));
                 @SuppressLint("Range") String endTime = cursor.getString(cursor.getColumnIndex("n.endTime"));
-                @SuppressLint("Range") String taskName = cursor.getString(cursor.getColumnIndex("t.name"));
                 @SuppressLint("Range") int taskType= cursor.getInt(cursor.getColumnIndex("t.taskType"));
 
                 //Converting date and time to LocalDate and LocalTime
@@ -607,27 +618,123 @@ public class DBHelper extends SQLiteOpenHelper {
 
                 float duration = calculateDuration(localStartTime,localEndTime);
 
-
-                boolean isExistingTaskType = false;
-
-                // Loop through the durationList
-                for (DurationType durationType : durationList) {
-                    if (durationType.getType()  == taskType) {
-                        // Task type already exists, update the duration value
-                        durationType.setDuration(durationType.getDuration() + duration);
-                        isExistingTaskType = true;
-                        break; // Exit the loop since we found the task type
+                boolean dateExists = false;
+                for (DurationList list : listWithDate) {
+                    if (list.getDate().isEqual(localDate)) {
+                        // Date already exists, update its duration list
+                        List<DurationType> durationList = list.getDurationList();
+                        boolean typeFound = false;
+                        // Loop through the durationList
+                        for (DurationType durationType : durationList) {
+                            if (durationType.getType()  == taskType) {
+                                // Task type already exists, update the duration value
+                                durationType.setDuration(durationType.getDuration() + duration);
+                                typeFound = true;
+                                break;
+                            }
+                        }
+                        if (!typeFound){
+                            durationList.add(new DurationType(taskType, duration));
+                            break;
+                        }
+                        list.setDurationList(durationList);
+                        dateExists = true;
+                        break;
                     }
                 }
-
-                // If the task type doesn't already exist, add it to the list
-                if (!isExistingTaskType) {
-                    durationList.add(new DurationType(taskType, duration));
+                // If date does not exist, create a new DurationList and add it to listWithDate
+                if (!dateExists) {
+                    List<DurationType> newDurationList = new ArrayList<>();
+                    newDurationList.add(new DurationType(taskType, duration));
+                    listWithDate.add(new DurationList(localDate, newDurationList));
                 }
             }while(cursor.moveToNext());
         }
+
+        // Close the cursor and the database connection
+        cursor.close();
+        db.close();
         return listWithDate;
     }
+
+
+    public List<DurationListMonth> getYearData(String tableName){
+        List<DurationListMonth> listWithMonths = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Get the current date
+        LocalDate currentDate = LocalDate.now();
+        LocalDate startDate;
+
+        // Get the date of the month before
+        startDate = currentDate.minusYears(1);
+
+        //getting dates into format for selection from db
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedCurrentDate = currentDate.format(dateFormatter);
+        String formattedStartDate = startDate.format(dateFormatter);
+
+        String selectQuerySchedule = "SELECT n.date, n.startTime, n.endTime, t.taskType FROM " + tableName +
+                "n join Task t on n.taskName = t.name  WHERE date >= ? AND date <= ?";
+        Cursor cursor = db.rawQuery(selectQuerySchedule, new String[]{formattedStartDate, formattedCurrentDate});
+        if (cursor.moveToFirst()){
+            do{
+                @SuppressLint("Range") String dateS = cursor.getString(cursor.getColumnIndex("n.date"));
+                @SuppressLint("Range") String startTime = cursor.getString(cursor.getColumnIndex("n.startTime"));
+                @SuppressLint("Range") String endTime = cursor.getString(cursor.getColumnIndex("n.endTime"));
+                @SuppressLint("Range") int taskType= cursor.getInt(cursor.getColumnIndex("t.taskType"));
+
+                //Converting date and time to LocalDate and LocalTime
+                DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                LocalDate localDate = LocalDate.parse(dateS, formatterDate);
+                int monthValue = localDate.getMonthValue();
+
+                DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm:ss");
+                LocalTime localStartTime = LocalTime.parse(startTime, formatterTime);
+                LocalTime localEndTime = LocalTime.parse(endTime, formatterTime);
+
+                float duration = calculateDuration(localStartTime,localEndTime);
+
+                boolean monthExists = false;
+                for (DurationListMonth list : listWithMonths) {
+                    if (list.getMonth() == monthValue) {
+                        // Date already exists, update its duration list
+                        List<DurationType> durationList = list.getDurationList();
+                        boolean typeFound = false;
+                        // Loop through the durationList
+                        for (DurationType durationType : durationList) {
+                            if (durationType.getType()  == taskType) {
+                                // Task type already exists, update the duration value
+                                durationType.setDuration(durationType.getDuration() + duration);
+                                typeFound = true;
+                                break;
+                            }
+                        }
+                        if (!typeFound){
+                            durationList.add(new DurationType(taskType, duration));
+                            break;
+                        }
+                        list.setDurationList(durationList);
+                        monthExists = true;
+                        break;
+                    }
+                }
+                // If date does not exist, create a new DurationList and add it to listWithDate
+                if (!monthExists) {
+                    List<DurationType> newDurationList = new ArrayList<>();
+                    newDurationList.add(new DurationType(taskType, duration));
+                    listWithMonths.add(new DurationListMonth(monthValue, newDurationList));
+                }
+            }while(cursor.moveToNext());
+        }
+
+        // Close the cursor and the database connection
+        cursor.close();
+        db.close();
+        return listWithMonths;
+    }
+
 
     public float calculateDuration(LocalTime startTime, LocalTime endTime){
         Duration duration = Duration.between(startTime,endTime);
