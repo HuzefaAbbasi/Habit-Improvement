@@ -599,14 +599,14 @@ public class DBHelper extends SQLiteOpenHelper {
         String formattedStartDate = startDate.format(dateFormatter);
 
         String selectQuerySchedule = "SELECT n.date, n.startTime, n.endTime, t.taskType FROM " + tableName +
-                "n join Task t on n.taskName = t.name  WHERE n.date >= ? AND n.date <= ?";
+                " n join Task t on n.taskName = t.name  WHERE n.date >= ? AND n.date <= ?";
         Cursor cursor = db.rawQuery(selectQuerySchedule, new String[]{formattedStartDate, formattedCurrentDate});
         if (cursor.moveToFirst()){
             do{
-                @SuppressLint("Range") String dateS = cursor.getString(cursor.getColumnIndex("n.date"));
-                @SuppressLint("Range") String startTime = cursor.getString(cursor.getColumnIndex("n.startTime"));
-                @SuppressLint("Range") String endTime = cursor.getString(cursor.getColumnIndex("n.endTime"));
-                @SuppressLint("Range") int taskType= cursor.getInt(cursor.getColumnIndex("t.taskType"));
+                @SuppressLint("Range") String dateS = cursor.getString(cursor.getColumnIndex("date"));
+                @SuppressLint("Range") String startTime = cursor.getString(cursor.getColumnIndex("startTime"));
+                @SuppressLint("Range") String endTime = cursor.getString(cursor.getColumnIndex("endTime"));
+                @SuppressLint("Range") int taskType= cursor.getInt(cursor.getColumnIndex("taskType"));
 
                 //Converting date and time to LocalDate and LocalTime
                 DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -645,7 +645,21 @@ public class DBHelper extends SQLiteOpenHelper {
                 // If date does not exist, create a new DurationList and add it to listWithDate
                 if (!dateExists) {
                     List<DurationType> newDurationList = new ArrayList<>();
-                    newDurationList.add(new DurationType(taskType, duration));
+                    newDurationList.add(new DurationType(1, 0));
+                    newDurationList.add(new DurationType(2, 0));
+                    newDurationList.add(new DurationType(3, 0));
+                    newDurationList.add(new DurationType(4, 0));
+                    newDurationList.add(new DurationType(5, 0));
+                    newDurationList.add(new DurationType(6, 0));
+
+                    for (DurationType durationType : newDurationList) {
+                        if (durationType.getType()  == taskType) {
+                            // Task type already exists, update the duration value
+                            durationType.setDuration(durationType.getDuration() + duration);
+                            break;
+                        }
+                    }
+
                     listWithDate.add(new DurationList(localDate, newDurationList));
                 }
             }while(cursor.moveToNext());
@@ -654,6 +668,7 @@ public class DBHelper extends SQLiteOpenHelper {
         // Close the cursor and the database connection
         cursor.close();
         db.close();
+        Log.d("List", "getWeekOrMonthData: "+ listWithDate);
         return listWithDate;
     }
 
@@ -676,14 +691,14 @@ public class DBHelper extends SQLiteOpenHelper {
         String formattedStartDate = startDate.format(dateFormatter);
 
         String selectQuerySchedule = "SELECT n.date, n.startTime, n.endTime, t.taskType FROM " + tableName +
-                "n join Task t on n.taskName = t.name  WHERE n.date >= ? AND n.date <= ?";
+                " n join Task t on n.taskName = t.name  WHERE n.date >= ? AND n.date <= ?";
         Cursor cursor = db.rawQuery(selectQuerySchedule, new String[]{formattedStartDate, formattedCurrentDate});
         if (cursor.moveToFirst()){
             do{
-                @SuppressLint("Range") String dateS = cursor.getString(cursor.getColumnIndex("n.date"));
-                @SuppressLint("Range") String startTime = cursor.getString(cursor.getColumnIndex("n.startTime"));
-                @SuppressLint("Range") String endTime = cursor.getString(cursor.getColumnIndex("n.endTime"));
-                @SuppressLint("Range") int taskType= cursor.getInt(cursor.getColumnIndex("t.taskType"));
+                @SuppressLint("Range") String dateS = cursor.getString(cursor.getColumnIndex("date"));
+                @SuppressLint("Range") String startTime = cursor.getString(cursor.getColumnIndex("startTime"));
+                @SuppressLint("Range") String endTime = cursor.getString(cursor.getColumnIndex("endTime"));
+                @SuppressLint("Range") int taskType= cursor.getInt(cursor.getColumnIndex("taskType"));
 
                 //Converting date and time to LocalDate and LocalTime
                 DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -695,6 +710,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 LocalTime localEndTime = LocalTime.parse(endTime, formatterTime);
 
                 float duration = calculateDuration(localStartTime,localEndTime);
+                Log.d("Duration", "getYearData:"+ duration);
 
                 boolean monthExists = false;
                 for (DurationListMonth list : listWithMonths) {
@@ -712,7 +728,7 @@ public class DBHelper extends SQLiteOpenHelper {
                             }
                         }
                         if (!typeFound){
-                            durationList.add(new DurationType(taskType, duration));
+                            Log.d("Duration Type Error", "Some hv error");
                             break;
                         }
                         list.setDurationList(durationList);
@@ -723,7 +739,20 @@ public class DBHelper extends SQLiteOpenHelper {
                 // If date does not exist, create a new DurationList and add it to listWithDate
                 if (!monthExists) {
                     List<DurationType> newDurationList = new ArrayList<>();
-                    newDurationList.add(new DurationType(taskType, duration));
+                    newDurationList.add(new DurationType(1, 0));
+                    newDurationList.add(new DurationType(2, 0));
+                    newDurationList.add(new DurationType(3, 0));
+                    newDurationList.add(new DurationType(4, 0));
+                    newDurationList.add(new DurationType(5, 0));
+                    newDurationList.add(new DurationType(6, 0));
+
+                    for (DurationType durationType : newDurationList) {
+                        if (durationType.getType()  == taskType) {
+                            // Task type already exists, update the duration value
+                            durationType.setDuration(durationType.getDuration() + duration);
+                            break;
+                        }
+                    }
                     listWithMonths.add(new DurationListMonth(monthValue, newDurationList));
                 }
             }while(cursor.moveToNext());
@@ -732,6 +761,7 @@ public class DBHelper extends SQLiteOpenHelper {
         // Close the cursor and the database connection
         cursor.close();
         db.close();
+        Log.d("List", "List: "+ listWithMonths);
         return listWithMonths;
     }
 
@@ -756,20 +786,19 @@ public class DBHelper extends SQLiteOpenHelper {
             Log.d("Time Span", "Wrong Time Span entered ");
         }
 
-
         //getting dates into format for selection from db
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String formattedCurrentDate = currentDate.format(dateFormatter);
         String formattedStartDate = startDate.format(dateFormatter);
 
         String selectQuerySchedule = "SELECT n.date, n.startTime, n.endTime, t.taskType FROM " + tableName +
-                "n join Task t on n.taskName = t.name  WHERE n.date >= ? AND n.date <= ? AND t.taskName = ?";
+                " n join Task t on n.taskName = t.name  WHERE n.date >= ? AND n.date <= ? AND t.name = ?";
         Cursor cursor = db.rawQuery(selectQuerySchedule, new String[]{formattedStartDate, formattedCurrentDate, taskName});
         if (cursor.moveToFirst()){
             do{
-                @SuppressLint("Range") String dateS = cursor.getString(cursor.getColumnIndex("n.date"));
-                @SuppressLint("Range") String startTime = cursor.getString(cursor.getColumnIndex("n.startTime"));
-                @SuppressLint("Range") String endTime = cursor.getString(cursor.getColumnIndex("n.endTime"));
+                @SuppressLint("Range") String dateS = cursor.getString(cursor.getColumnIndex("date"));
+                @SuppressLint("Range") String startTime = cursor.getString(cursor.getColumnIndex("startTime"));
+                @SuppressLint("Range") String endTime = cursor.getString(cursor.getColumnIndex("endTime"));
 //                @SuppressLint("Range") int taskType= cursor.getInt(cursor.getColumnIndex("t.taskType"));
 
                 //Converting date and time to LocalDate and LocalTime
@@ -801,6 +830,7 @@ public class DBHelper extends SQLiteOpenHelper {
         // Close the cursor and the database connection
         cursor.close();
         db.close();
+        Log.d("Tasks", "getWeekOrMonthDataByTask: "+ listWithDate);
         return listWithDate;
     }
 
@@ -823,13 +853,13 @@ public class DBHelper extends SQLiteOpenHelper {
         String formattedStartDate = startDate.format(dateFormatter);
 
         String selectQuerySchedule = "SELECT n.date, n.startTime, n.endTime, t.taskType FROM " + tableName +
-                "n join Task t on n.taskName = t.name  WHERE n.date >= ? AND n.date <= ? AND t.taskName = ?";
+                " n join Task t on n.taskName = t.name  WHERE n.date >= ? AND n.date <= ? AND t.name = ?";
         Cursor cursor = db.rawQuery(selectQuerySchedule, new String[]{formattedStartDate, formattedCurrentDate, taskName});
         if (cursor.moveToFirst()){
             do{
-                @SuppressLint("Range") String dateS = cursor.getString(cursor.getColumnIndex("n.date"));
-                @SuppressLint("Range") String startTime = cursor.getString(cursor.getColumnIndex("n.startTime"));
-                @SuppressLint("Range") String endTime = cursor.getString(cursor.getColumnIndex("n.endTime"));
+                @SuppressLint("Range") String dateS = cursor.getString(cursor.getColumnIndex("date"));
+                @SuppressLint("Range") String startTime = cursor.getString(cursor.getColumnIndex("startTime"));
+                @SuppressLint("Range") String endTime = cursor.getString(cursor.getColumnIndex("endTime"));
                 //    @SuppressLint("Range") int taskType= cursor.getInt(cursor.getColumnIndex("t.taskType"));
 
                 //Converting date and time to LocalDate and LocalTime
@@ -861,12 +891,15 @@ public class DBHelper extends SQLiteOpenHelper {
         // Close the cursor and the database connection
         cursor.close();
         db.close();
+        Log.d("Tasks", "getWeekOrMonthDataByTask: "+ listWithMonths);
         return listWithMonths;
     }
 
 
 
     public float calculateDuration(LocalTime startTime, LocalTime endTime){
+        Log.d("Start", "calculateDuration: "+ startTime);
+        Log.d("End", "calculateDuration: "+ endTime);
         Duration duration = Duration.between(startTime,endTime);
         float durationTime = duration.toMinutes() / 60f;
         return  durationTime;
@@ -882,6 +915,8 @@ public class DBHelper extends SQLiteOpenHelper {
         Log.d("mytag", Long.toString(k));
         db.close();
     }
+      dataset.add(index, list.get(0).getDuration, list.get(1).getDuration, list.get(2).getDuration,
+       list.get(3).getDuration, list.get(4).getDuration, list.get(5).getDuration)
 
     public boolean checkUser(String email, String password){
         SQLiteDatabase db = this.getReadableDatabase();

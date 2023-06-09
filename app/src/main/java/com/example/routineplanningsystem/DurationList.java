@@ -12,6 +12,14 @@ public class DurationList {
         this.durationTypeList = durationTypeList;
     }
 
+    @Override
+    public String toString() {
+        return "DurationList{" +
+                "date=" + date +
+                ", durationTypeList=" + durationTypeList +
+                '}';
+    }
+
     public LocalDate getDate() {
         return date;
     }

@@ -24,4 +24,12 @@ public class DurationListTaskMonth {
     public void setDuration(float duration) {
         this.duration = duration;
     }
+
+    @Override
+    public String toString() {
+        return "DurationListTaskMonth{" +
+                "month=" + month +
+                ", duration=" + duration +
+                '}';
+    }
 }

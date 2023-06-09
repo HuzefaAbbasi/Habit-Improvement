@@ -4,6 +4,7 @@ public class DurationType {
     private int type;
     private float duration ;
 
+
     public DurationType(int type, float duration) {
         this.type = type;
         this.duration = duration;
@@ -23,5 +24,12 @@ public class DurationType {
 
     public void setDuration(float duration) {
         this.duration = duration;
+    }
+    @Override
+    public String toString() {
+        return "DurationType{" +
+                "type=" + type +
+                ", duration=" + duration +
+                '}';
     }
 }

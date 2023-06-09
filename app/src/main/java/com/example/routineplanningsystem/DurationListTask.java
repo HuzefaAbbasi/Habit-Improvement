@@ -26,4 +26,12 @@ public class DurationListTask {
     public void setDuration(float duration) {
         this.duration = duration;
     }
+
+    @Override
+    public String toString() {
+        return "DurationListTask{" +
+                "date=" + date +
+                ", duration=" + duration +
+                '}';
+    }
 }

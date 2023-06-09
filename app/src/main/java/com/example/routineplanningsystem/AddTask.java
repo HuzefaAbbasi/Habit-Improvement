@@ -18,16 +18,18 @@ public class AddTask extends AppCompatActivity {
 
     String taskCategory;
     int taskType = 0;
+    View nameBox;
+    TextView categoryText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
         DBHelper dbHelper = new DBHelper(this, "habit",null, 1);
-
+        dbHelper.getYearDataByTask("Progress", "Assignment");
         EditText nameEditBox, descriptionEditBox;
         Button btn1, btn2, btn3, btn4, btn5, btn6, addButton;
-        TextView categoryText;
-        View nameBox;
+
+
 
         nameEditBox = findViewById(R.id.taskNameEditText);
         descriptionEditBox = findViewById(R.id.descriptionEditText);
@@ -48,56 +50,37 @@ public class AddTask extends AppCompatActivity {
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                nameBox.setBackgroundColor(getResources().getColor(R.color.work));
-                taskCategory = "Work";
-                taskType = 1;
-                categoryText.setText(taskCategory);
+                  setTaskCategory(R.color.work,"Work",1);
             }
         });
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                nameBox.setBackgroundColor(getResources().getColor(R.color.sleep));
-                taskCategory = "Sleep";
-                taskType = 2;
-                categoryText.setText(taskCategory);
+                setTaskCategory(R.color.sleep,"Sleep",2);
             }
         });
         btn3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                nameBox.setBackgroundColor(getResources().getColor(R.color.spiritual));
-                taskCategory = "Spirtual";
-                taskType = 3;
-                categoryText.setText(taskCategory);
+                setTaskCategory(R.color.spiritual,"Spirtual",3);
             }
         });
 
         btn4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                nameBox.setBackgroundColor(getResources().getColor(R.color.relax));
-                taskCategory = "Relax";
-                taskType = 4;
-                categoryText.setText(taskCategory);
+                setTaskCategory(R.color.relax,"Relax",4);
             }
         });
         btn5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                nameBox.setBackgroundColor(getResources().getColor(R.color.development));
-                taskCategory = "Development";
-                taskType = 5;
-                categoryText.setText(taskCategory);
-            }
+                setTaskCategory(R.color.development,"Development",5);}
         });
         btn6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                nameBox.setBackgroundColor(getResources().getColor(R.color.social));
-                taskCategory = "Social";
-                taskType = 6;
-                categoryText.setText(taskCategory);
+                setTaskCategory(R.color.social,"Social",6);
             }
         });
 
@@ -133,5 +116,13 @@ public class AddTask extends AppCompatActivity {
                 }
             }
         });
+
     }
+    private void setTaskCategory(int backgroundColor, String category, int type) {
+        nameBox.setBackgroundColor(getResources().getColor(backgroundColor));
+        taskCategory = category;
+        taskType = type;
+        categoryText.setText(taskCategory);
+    }
+
 }

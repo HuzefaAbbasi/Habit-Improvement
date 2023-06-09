@@ -19,11 +19,19 @@ public class DurationListMonth {
         this.month = month;
     }
 
+
     public List<DurationType> getDurationList() {
         return durationTypeList;
     }
 
     public void setDurationList(List<DurationType> durationTypeList) {
         this.durationTypeList = durationTypeList;
+    }
+    @Override
+    public String toString() {
+        return "DurationListMonth{" +
+                "month=" + month +
+                ", durationTypeList=" + durationTypeList +
+                '}';
     }
 }
