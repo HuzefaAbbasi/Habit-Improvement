@@ -799,7 +799,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 @SuppressLint("Range") String dateS = cursor.getString(cursor.getColumnIndex("date"));
                 @SuppressLint("Range") String startTime = cursor.getString(cursor.getColumnIndex("startTime"));
                 @SuppressLint("Range") String endTime = cursor.getString(cursor.getColumnIndex("endTime"));
-//                @SuppressLint("Range") int taskType= cursor.getInt(cursor.getColumnIndex("t.taskType"));
+                @SuppressLint("Range") int taskType= cursor.getInt(cursor.getColumnIndex("taskType"));
 
                 //Converting date and time to LocalDate and LocalTime
                 DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -822,7 +822,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 }
                 // If date does not exist, create a new DurationList and add it to listWithDate
                 if (!dateExists) {
-                    listWithDate.add(new DurationListTask(localDate, duration));
+                    listWithDate.add(new DurationListTask(localDate, duration, taskType));
                 }
             }while(cursor.moveToNext());
         }
@@ -860,7 +860,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 @SuppressLint("Range") String dateS = cursor.getString(cursor.getColumnIndex("date"));
                 @SuppressLint("Range") String startTime = cursor.getString(cursor.getColumnIndex("startTime"));
                 @SuppressLint("Range") String endTime = cursor.getString(cursor.getColumnIndex("endTime"));
-                //    @SuppressLint("Range") int taskType= cursor.getInt(cursor.getColumnIndex("t.taskType"));
+                @SuppressLint("Range") int taskType= cursor.getInt(cursor.getColumnIndex("taskType"));
 
                 //Converting date and time to LocalDate and LocalTime
                 DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -884,7 +884,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 }
                 // If date does not exist, create a new DurationList and add it to listWithDate
                 if (!monthExists) {
-                    listWithMonths.add(new DurationListTaskMonth(monthValue, duration));
+                    listWithMonths.add(new DurationListTaskMonth(monthValue, duration, taskType));
                 }
             }while(cursor.moveToNext());
         }
