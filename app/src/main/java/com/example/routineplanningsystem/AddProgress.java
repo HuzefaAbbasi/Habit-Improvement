@@ -25,8 +25,10 @@ import android.widget.Toast;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Stack;
 
 public class AddProgress extends AppCompatActivity {
@@ -260,32 +262,39 @@ public class AddProgress extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 String selectedValue = taskAutoComplete.getText().toString();
-
+                Map<Integer , Integer> colorVal = new HashMap<>();
+                colorVal.put(1, R.color.work);
+                colorVal.put(2, R.color.sleep);
+                colorVal.put(3, R.color.spiritual);
+                colorVal.put(4, R.color.relax);
+                colorVal.put(5, R.color.development);
+                colorVal.put(6, R.color.social);
                 // Check the selected value and update the text color accordingly
                 // task that user selects from auto complete
                 String enteredTask = taskAutoComplete.getText().toString().trim().toLowerCase();
                 for (Task task: taskList){
                     String str = task.getTaskName().trim().toLowerCase();
                     if (enteredTask.equals(str)) {
-                        if (task.getTaskType() == 1) {
-                            taskAutoComplete.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.work));
-                            break;
-                        } else if (task.getTaskType() == 2) {
-                            taskAutoComplete.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.sleep));
-                            break;
-                        } else if (task.getTaskType() == 3) {
-                            taskAutoComplete.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.spiritual));
-                            break;
-                        } else if (task.getTaskType() == 4) {
-                            taskAutoComplete.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.relax));
-                            break;
-                        } else if (task.getTaskType() == 5) {
-                            taskAutoComplete.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.development));
-                            break;
-                        } else if (task.getTaskType() == 6) {
-                            taskAutoComplete.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.social));
-                            break;
-                        }
+                        taskAutoComplete.setTextColor(ContextCompat.getColor(getApplicationContext(), colorVal.get(task.getTaskType())));
+//                        if (task.getTaskType() == 1) {
+//                            taskAutoComplete.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.work));
+//                            break;
+//                        } else if (task.getTaskType() == 2) {
+//                            taskAutoComplete.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.sleep));
+//                            break;
+//                        } else if (task.getTaskType() == 3) {
+//                            taskAutoComplete.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.spiritual));
+//                            break;
+//                        } else if (task.getTaskType() == 4) {
+//                            taskAutoComplete.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.relax));
+//                            break;
+//                        } else if (task.getTaskType() == 5) {
+//                            taskAutoComplete.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.development));
+//                            break;
+//                        } else if (task.getTaskType() == 6) {
+//                            taskAutoComplete.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.social));
+//                            break;
+//                        }
                     }
                 }
             }
