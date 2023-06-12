@@ -7,27 +7,29 @@
     tools:context=".TaskList">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="408dp"
-        android:layout_height="438dp"
-        android:background="@drawable/tasklistrecyclerview"
+        android:id="@+id/recyclerView01"
+        android:layout_width="match_parent"
+        android:layout_height="387dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/mainbox"
+        android:translationZ="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView7"
+        app:layout_constraintVertical_bias="0.936" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout4"
-        android:layout_width="398dp"
+        android:layout_width="match_parent"
         android:layout_height="143dp"
-        android:layout_marginBottom="16dp"
-        android:background="@color/primary"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/base"
+        android:translationZ="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.461"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerView"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintHorizontal_bias="0.6"
+        app:layout_constraintStart_toStartOf="parent">
 
         <Button
             android:id="@+id/goToAddTaskButton"
@@ -43,9 +45,10 @@
             app:guidelineUseRtl="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.37" />
+            app:layout_constraintVertical_bias="0.807" />
 
         <ImageView
             android:id="@+id/goToAddTaskImageView"
@@ -113,31 +116,15 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout3"
-        android:layout_width="match_parent"
-        android:layout_height="81dp"
-        android:background="@color/primary"
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="412dp"
+        android:layout_height="276dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.333"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="120dp"
-            android:layout_height="33dp"
-            android:background="@drawable/tasktitlebackground"
-            android:text="   Tasks"
-            android:textColor="@color/white"
-            android:textSize="24sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.093"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.225" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/background" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,6 +14,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class ScheduleTabLayOutView extends AppCompatActivity {
+
+
+
     private static final String TAG = "MainActivity";
 
     //changes for Fragment implemetnation
@@ -27,12 +30,12 @@ public class ScheduleTabLayOutView extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, " Build.VERSION_CODES.O Found)");
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.schedule_tablayout_view);
-    tabLayout = findViewById(R.id.tab_layout);
-    viewPager2 = findViewById(R.id.view_pager);
-    Log.d(TAG, "onCreate: MainActivity created");
-
-
+        tabLayout = findViewById(R.id.tab_layout01);
+        viewPager2 = findViewById(R.id.view_pager01);
+        Log.d(TAG, "onCreate: MainActivity created");
 
         tabLayout.addTab(tabLayout.newTab().setText("")); // Placeholder tab
         tabLayout.addTab(tabLayout.newTab().setText("")); // Placeholder tab

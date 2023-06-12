@@ -4,15 +4,21 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.icu.util.Calendar;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
 
 public class AddTask extends AppCompatActivity {
 
@@ -25,11 +31,19 @@ public class AddTask extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
         DBHelper dbHelper = new DBHelper(this, "habit",null, 1);
-        dbHelper.getYearDataByTask("Progress", "Assignment");
+
+//        dbHelper.insertTask(new Task("Work", null, 2));
+//        dbHelper.insertTask(new Task("Assignment", null, 2));
+//        dbHelper.insertTask(new Task("Quiz", null, 2));
+//        List<Task> list = dbHelper.getAllTasks();
+//        Log.d("List Size", "onCreate: "+ list.size());
         EditText nameEditBox, descriptionEditBox;
-        Button btn1, btn2, btn3, btn4, btn5, btn6, addButton;
+        Button btn1, btn2, btn3, btn4, btn5, btn6, addButton, menuTaskButton, menuScheduleButton, menuProgressButton, menuReportButton;
 
-
+        menuTaskButton = findViewById(R.id.menuTaskButton);
+        menuScheduleButton = findViewById(R.id.menuScheduleButton);
+        menuProgressButton = findViewById(R.id.menuProgressButton);
+        menuReportButton = findViewById(R.id.menuReportButton);
 
         nameEditBox = findViewById(R.id.taskNameEditText);
         descriptionEditBox = findViewById(R.id.descriptionEditText);
@@ -46,6 +60,15 @@ public class AddTask extends AppCompatActivity {
         categoryText = findViewById(R.id.categoryTextView);
 
         nameBox = findViewById(R.id.nameBox);
+
+//        menuScheduleButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(this, );
+//
+//
+//            }
+//        });
 
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override

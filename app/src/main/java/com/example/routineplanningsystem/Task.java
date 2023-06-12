@@ -34,4 +34,13 @@ public class Task {
         this.taskDescription = taskDescription;
         this.taskType = taskType;
     }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "taskName='" + taskName + '\'' +
+                ", taskDescription='" + taskDescription + '\'' +
+                ", taskType=" + taskType +
+                '}';
+    }
 }

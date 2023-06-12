@@ -29,7 +29,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     // public static synchronized DBHelper getInstance (Context context) { if (instance == null) { instance = new DBHelper (context.getApplicationContext ()); } return instance; }
 
-    private DBHelper (Context context) { super (context, "db", null, 1); }
+    private DBHelper (Context context) { super (context, "habit", null, 1); }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -88,7 +88,7 @@ public class DBHelper extends SQLiteOpenHelper {
             db.close();
             //implement this to insure integrity
             if(k!=-1){
-                Log.d("insert schedule success", Long.toString(k));
+                Log.d("insert task success", Long.toString(k));
                 return true;
             }
             else{
@@ -164,6 +164,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     @SuppressLint("Range") String description = cursor.getString(cursor.getColumnIndex("description"));
                     Task task = new Task(name, description, taskType);
                     taskList.add(task);
+                    Log.d("All Tasks", "getAllTasks: "+ task);
                 } while (cursor.moveToNext());
             }
             cursor.close();
@@ -361,6 +362,7 @@ public class DBHelper extends SQLiteOpenHelper {
                         Task task = new Task(taskName, taskDescription,taskType);
                         Schedule schedule = new Schedule(localDate, localStartTime, localEndTime, task);
                         scheduleList.add(schedule);
+                        Log.d("Schedule entry", "getAllScheduleForDate: "+ schedule);
                     }
                 } while (cursor.moveToNext());
             }

@@ -186,9 +186,9 @@ public class RecyclerViewAdapterSchedule extends RecyclerView.Adapter<RecyclerVi
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
 
-            taskName = itemView.findViewById(R.id.textView7);
-            duration = itemView.findViewById(R.id.textView8);
-            startingTime = itemView.findViewById(R.id.textView9);
+            taskName = itemView.findViewById(R.id.textView017);
+            duration = itemView.findViewById(R.id.textView018);
+            startingTime = itemView.findViewById(R.id.textView019);
             countDownTimerText = itemView.findViewById(R.id.textView10);
 
         }

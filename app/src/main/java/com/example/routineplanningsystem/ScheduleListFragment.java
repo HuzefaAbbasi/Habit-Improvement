@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,8 +46,8 @@ private LocalDate date1;  //for displaying changing data in tabs
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-View view = inflater.inflate(R.layout.schedule_list,container,false);
-        recyclerView = view.findViewById(R.id.recyclerView);
+        View view = inflater.inflate(R.layout.schedule_list,container,false);
+        recyclerView = view.findViewById(R.id.recyclerView01);
         //buttonTest = view.findViewById(R.id.buttonTest);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -65,70 +64,118 @@ View view = inflater.inflate(R.layout.schedule_list,container,false);
 //            date1 = LocalDate.now();
 //        }
 
-        DBHelper habit = new DBHelper(getActivity(), "db",null, 1);
-        // Test for taskListGetting   Task task1 = new Task("1", null ,2) //Task task2 = new Task("2", null ,2) habit.insertTask(task1);  habit.insertTask(task2);
-        Task task1 = new Task("11", null ,1);
-        Task task2 = new Task("12", null ,1);
-
-
-        habit.insertTask(task1);  habit.insertTask(task2);
-        LocalTime time = LocalTime.of(12,55);
-        LocalTime endtime = LocalTime.of(15,12);
-
-        LocalTime time2 = LocalTime.of(12,56);
-        LocalTime endtime2 = LocalTime.of(19,12);
-
-        LocalTime time3 = LocalTime.of(17,57);
-        LocalTime endtime3 = LocalTime.of(19,12);
-
-        LocalTime time4 = LocalTime.of(17,24);
-        LocalTime endtime4 = LocalTime.of(19,12);
-
-
-
-        //for formatting and inserting hte schduele into Database
-        LocalDate date = LocalDate.of(2023, 6, 5);
-        LocalDate date2 = LocalDate.of(2023, 6, 5);
-        LocalDate date3 = LocalDate.of(2023, 6, 5);
-        LocalDate date4 = LocalDate.of(2023, 6, 5);
-
-
-        //        DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//        LocalDate localDate1 = LocalDate.parse(date.toString(), formatterDate);
-//        LocalDate localDate2 = LocalDate.parse(date2.toString(), formatterDate);
+        DBHelper dbHelper = new DBHelper(getActivity(), "habit",null, 1);
 //
-//        DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm:ss");
-//        LocalTime localStartTime = LocalTime.parse(time.toString(), formatterTime);
-//        LocalTime localEndTime = LocalTime.parse(endtime.toString(), formatterTime);
+//        LocalTime time = LocalTime.of(12,55);
+//        LocalTime endtime = LocalTime.of(15,12);
 //
-//        LocalTime localStartTime2 = LocalTime.parse(time2.toString(), formatterTime);
-//        LocalTime localEndTime2 = LocalTime.parse(endtime2.toString(), formatterTime);
-
-
-        //   Schedule schedule = new Schedule();
-//        Schedule schedule1 = new Schedule(localDate1, localStartTime, localEndTime, task1);
-//        Schedule schedule2 = new Schedule(localDate2, localStartTime2, localEndTime2, task2);
-        Schedule schedule1 = new Schedule(date, time, endtime, task1);
-        Schedule schedule2 = new Schedule(date2, time2, endtime2, task2);
-        Schedule schedule3 = new Schedule(date3, time3, endtime3, task1);
-        Schedule schedule4 = new Schedule(date3, time4, endtime4, task2);
-
-        habit.insertSchedule(schedule1); habit.insertSchedule(schedule2);
-        habit.insertSchedule(schedule3); habit.insertSchedule(schedule4);
-
-        //     schedule.insertSchedule(task1, localDate1, localStartTime , localEndTime);
-        //  schedule.insertSchedule(task2, localDate2, localStartTime2, localEndTime2);
+//        LocalTime time2 = LocalTime.of(12,56);
+//        LocalTime endtime2 = LocalTime.of(19,12);
+//
+//        LocalTime time3 = LocalTime.of(17,57);
+//        LocalTime endtime3 = LocalTime.of(19,12);
+//
+//        LocalTime time4 = LocalTime.of(17,24);
+//        LocalTime endtime4 = LocalTime.of(19,12);
+//
+//        //for formatting and inserting hte schduele into Database
+//        LocalDate date1 = LocalDate.of(2023, 6, 1);
+//        LocalDate date2 = LocalDate.of(2023, 6, 11);
+//        LocalDate date3 = LocalDate.of(2023, 6, 9);
+//
+//
+//
+//
+//
+//        //        DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+////        LocalDate localDate1 = LocalDate.parse(date.toString(), formatterDate);
+////        LocalDate localDate2 = LocalDate.parse(date2.toString(), formatterDate);
+////
+////        DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm:ss");
+////        LocalTime localStartTime = LocalTime.parse(time.toString(), formatterTime);
+////        LocalTime localEndTime = LocalTime.parse(endtime.toString(), formatterTime);
+////
+////        LocalTime localStartTime2 = LocalTime.parse(time2.toString(), formatterTime);
+////        LocalTime localEndTime2 = LocalTime.parse(endtime2.toString(), formatterTime);
+//
+//
+//        //   Schedule schedule = new Schedule();
+////        Schedule schedule1 = new Schedule(localDate1, localStartTime, localEndTime, task1);
+////        Schedule schedule2 = new Schedule(localDate2, localStartTime2, localEndTime2, task2);
+//        Schedule schedule1 = new Schedule(date1, time, endtime, new Task("Work", null, 2));
+//        Schedule schedule2 = new Schedule(date2, time2, endtime2, new Task("Quiz", null, 2));
+//        Schedule schedule3 = new Schedule(date3, time3, endtime3, new Task("Work", null, 2));
+//
+//        dbHelper.insertSchedule(schedule1);
+//        dbHelper.insertSchedule(schedule2);
+//        dbHelper.insertSchedule(schedule3);
+//
+//        //DBHelper habit = new DBHelper(getActivity(), "habit",null, 1);
+//        // Test for taskListGetting   Task task1 = new Task("1", null ,2) //Task task2 = new Task("2", null ,2) habit.insertTask(task1);  habit.insertTask(task2);
+////        Task task1 = new Task("11", null ,1);
+////        Task task2 = new Task("12", null ,1);
+////
+////
+////        habit.insertTask(task1);  habit.insertTask(task2);
+////        LocalTime time = LocalTime.of(12,55);
+////        LocalTime endtime = LocalTime.of(15,12);
+////
+////        LocalTime time2 = LocalTime.of(12,56);
+////        LocalTime endtime2 = LocalTime.of(19,12);
+////
+////        LocalTime time3 = LocalTime.of(17,57);
+////        LocalTime endtime3 = LocalTime.of(19,12);
+////
+////        LocalTime time4 = LocalTime.of(17,24);
+////        LocalTime endtime4 = LocalTime.of(19,12);
+////
+////
+////
+////        //for formatting and inserting hte schduele into Database
+////        LocalDate date = LocalDate.of(2023, 6, 5);
+////        LocalDate date2 = LocalDate.of(2023, 6, 5);
+////        LocalDate date3 = LocalDate.of(2023, 6, 5);
+////        LocalDate date4 = LocalDate.of(2023, 6, 5);
+////
+////
+////        //        DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//////        LocalDate localDate1 = LocalDate.parse(date.toString(), formatterDate);
+//////        LocalDate localDate2 = LocalDate.parse(date2.toString(), formatterDate);
+//////
+//////        DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm:ss");
+//////        LocalTime localStartTime = LocalTime.parse(time.toString(), formatterTime);
+//////        LocalTime localEndTime = LocalTime.parse(endtime.toString(), formatterTime);
+//////
+//////        LocalTime localStartTime2 = LocalTime.parse(time2.toString(), formatterTime);
+//////        LocalTime localEndTime2 = LocalTime.parse(endtime2.toString(), formatterTime);
+////
+////
+////        //   Schedule schedule = new Schedule();
+//////        Schedule schedule1 = new Schedule(localDate1, localStartTime, localEndTime, task1);
+//////        Schedule schedule2 = new Schedule(localDate2, localStartTime2, localEndTime2, task2);
+////        Schedule schedule1 = new Schedule(date, time, endtime, task1);
+////        Schedule schedule2 = new Schedule(date2, time2, endtime2, task2);
+////        Schedule schedule3 = new Schedule(date3, time3, endtime3, task1);
+////        Schedule schedule4 = new Schedule(date3, time4, endtime4, task2);
+////
+////        habit.insertSchedule(schedule1); habit.insertSchedule(schedule2);
+////        habit.insertSchedule(schedule3); habit.insertSchedule(schedule4);
+//
+//        //     schedule.insertSchedule(task1, localDate1, localStartTime , localEndTime);
+//        //  schedule.insertSchedule(task2, localDate2, localStartTime2, localEndTime2);
 
         //for insertion of task list into taskArrayList
         scheduleArrayList = new ArrayList<>();
-        List<Schedule> scheduleList = habit.getAllScheduleForDate(date1);
+        List<Schedule> scheduleList = dbHelper.getAllScheduleForDate(date1);
+
         for(Schedule schedule : scheduleList) {
             scheduleArrayList.add(schedule);
         }
+        Log.d("List Size", "onCreateView: "+scheduleList.size());
         Log.d("view list", String.valueOf(scheduleArrayList.size()));
 
 //for the recycleViewAdapter
-        recyclerViewAdapterSchedule = new RecyclerViewAdapterSchedule(getActivity(),scheduleArrayList, habit);
+        recyclerViewAdapterSchedule = new RecyclerViewAdapterSchedule(getActivity(),scheduleArrayList, dbHelper);
         recyclerView.setAdapter(recyclerViewAdapterSchedule);
         // Inflate the layout for this fragment
 return view;

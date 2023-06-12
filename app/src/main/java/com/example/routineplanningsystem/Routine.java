@@ -75,5 +75,15 @@ public class Routine {
     public void setTask(Task task) {
         this.task = task;
     }
+
+    @Override
+    public String toString() {
+        return "Routine{" +
+                "date=" + date +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", task=" + task +
+                '}';
+    }
 }
 

@@ -39,6 +39,6 @@ public class ViewPagerAdapterSchedule extends FragmentStateAdapter {
     public int getItemCount() {
         Log.d(TAG, "onCreate: ItemSize Returned");
 
-        return 100;
+        return 2000;
     }
 }
