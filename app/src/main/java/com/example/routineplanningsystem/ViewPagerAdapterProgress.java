@@ -39,6 +39,6 @@ public class ViewPagerAdapterProgress extends FragmentStateAdapter {
     public int getItemCount() {
         Log.d(TAG, "onCreate: ItemSize Returned");
 
-        return 2000;
+        return 100;
     }
 }

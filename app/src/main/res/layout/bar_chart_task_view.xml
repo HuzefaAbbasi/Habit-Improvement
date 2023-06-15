@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 01 for alligining the ids-->
+
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -9,70 +9,104 @@
     android:background="@color/base"
     tools:context=".BarChartClass">
 
+    <EditText
+        android:id="@+id/editTextTaskView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="10dp"
+        android:ems="10"
+        android:hint="Enter Task Name and Select Duration"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.087"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout20" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout01"
-        android:layout_width="392dp"
-        android:layout_height="213dp"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout0110"
+        android:id="@+id/constraintLayout20"
+        android:layout_width="121dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/categorybox"
+        android:elevation="10dp"
+        android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintHorizontal_bias="0.058"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="393dp"
-            android:layout_height="184dp"
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reports"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.492"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/constraintLayout12">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/chartSchedule01"
-                android:layout_width="387dp"
-                android:layout_height="143dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="1.0"
-                tools:ignore="MissingClass">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayoutSc"
+        android:layout_width="match_parent"
+        android:layout_height="260dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
 
-            </com.github.mikephil.charting.charts.BarChart>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/chartSchedule01"
+            android:layout_width="match_parent"
+            android:layout_height="182dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.493"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.777"
+            tools:ignore="MissingClass">
+
+        </com.github.mikephil.charting.charts.BarChart>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout12"
-            android:layout_width="388dp"
-            android:layout_height="54dp"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginBottom="1dp"
+            app:layout_constraintBottom_toTopOf="@+id/chartSchedule01"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="178dp"
-                android:layout_height="55dp"
+                android:layout_width="197dp"
+                android:layout_height="40dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <Button
                     android:id="@+id/buttonFullView"
-                    android:layout_width="148dp"
-                    android:layout_height="44dp"
+                    android:layout_width="100dp"
+                    android:layout_height="33dp"
+                    android:background="@drawable/addtaskbutton"
                     android:text="Full View"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.5" />
+                    app:layout_constraintVertical_bias="0.64" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintLayout015"
+                android:id="@+id/constraintLayout5"
                 android:layout_width="215dp"
                 android:layout_height="33dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -80,7 +114,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
-                    android:id="@+id/textViewSchedule01"
+                    android:id="@+id/textViewSchedule"
                     android:layout_width="149dp"
                     android:layout_height="39dp"
                     android:text="Schedule"
@@ -98,27 +132,17 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout014"
-        android:layout_width="387dp"
-        android:layout_height="63dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout012"
-        android:layout_width="388dp"
+        android:id="@+id/constraintLayout2"
+        android:layout_width="match_parent"
         android:layout_height="58dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout01"
+        android:layout_marginTop="12dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.6"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTaskView">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout016"
+            android:id="@+id/constraintLayout6"
             android:layout_width="126dp"
             android:layout_height="33dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -127,9 +151,9 @@
 
             <Button
                 android:id="@+id/buttonByWeek01"
-                android:layout_width="103dp"
-                android:layout_height="53dp"
-                android:background="@color/box_color"
+                android:layout_width="100dp"
+                android:layout_height="33dp"
+                android:background="@drawable/addtaskbutton"
                 android:text="Week"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -140,43 +164,46 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout017"
+            android:id="@+id/constraintLayout7"
             android:layout_width="142dp"
             android:layout_height="34dp"
             android:layout_marginStart="122dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/constraintLayout019"
+            app:layout_constraintStart_toStartOf="@+id/constraintLayout9"
             app:layout_constraintTop_toTopOf="parent">
 
             <Button
                 android:id="@+id/buttonByYear01"
-                android:layout_width="110dp"
-                android:layout_height="49dp"
-                android:background="@color/box_color"
+                android:layout_width="100dp"
+                android:layout_height="33dp"
+                android:background="@drawable/categorybox"
                 android:text="Year"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.466" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout019"
+            android:id="@+id/constraintLayout9"
             android:layout_width="123dp"
             android:layout_height="37dp"
             android:layout_marginStart="137dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/constraintLayout016"
+            app:layout_constraintStart_toStartOf="@+id/constraintLayout6"
             app:layout_constraintTop_toTopOf="parent">
 
             <Button
                 android:id="@+id/buttonByMonth01"
-                android:layout_width="127dp"
-                android:layout_height="55dp"
+                android:layout_width="100dp"
+                android:layout_height="33dp"
+                android:background="@drawable/categorybox"
                 android:text="Month"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.304"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -184,35 +211,34 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout0110"
-        android:layout_width="402dp"
-        android:layout_height="242dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout014"
+        android:id="@+id/constraintLayout10"
+        android:layout_width="396dp"
+        android:layout_height="248dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintHorizontal_bias="0.666"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayoutSc">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout013"
-            android:layout_width="400dp"
+            android:id="@+id/constraintLayout3"
+            android:layout_width="match_parent"
             android:layout_height="190dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.476"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0">
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayOutOnProgress">
 
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/chartProgress01"
-                android:layout_width="398dp"
-                android:layout_height="175dp"
+                android:layout_width="match_parent"
+                android:layout_height="182dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.526"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.538"
                 tools:ignore="MissingClass">
 
             </com.github.mikephil.charting.charts.BarChart>
@@ -220,70 +246,86 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayOutOnProgress01"
-            android:layout_width="223dp"
-            android:layout_height="47dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/constraintLayout013"
+            android:id="@+id/constraintLayOutOnProgress"
+            android:layout_width="225dp"
+            android:layout_height="37dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="0.005"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0">
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/textViewProgress01"
+                android:id="@+id/textViewProgress"
                 android:layout_width="149dp"
                 android:layout_height="39dp"
                 android:text="Progress"
                 android:textSize="28sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.5" />
+                app:layout_constraintVertical_bias="1.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout8"
-        android:layout_width="398dp"
-        android:layout_height="46dp"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout11"
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="74dp"
+        android:background="@color/primary"
+        android:elevation="21dp"
+        android:padding="8dp"
+        android:translationZ="-2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout10"
+        app:layout_constraintVertical_bias="0.958">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/menuTaskButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="28dp"
+            android:background="@drawable/plusicon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout11"
-        android:layout_width="389dp"
-        android:layout_height="87dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout012"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.75"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <EditText
-            android:id="@+id/editTextTaskView"
-            android:layout_width="397dp"
-            android:layout_height="76dp"
-            android:ems="10"
-            android:inputType="text"
-            android:text="Name"
-            android:textColor="@color/text"
+        <Button
+            android:id="@+id/menuReportButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="28dp"
+            android:background="@drawable/reportactive"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.5" />
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/menuScheduleButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/schedule"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/menuProgressButton"
+            app:layout_constraintHorizontal_bias="0.458"
+            app:layout_constraintStart_toEndOf="@+id/menuTaskButton"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/menuProgressButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="44dp"
+            android:background="@drawable/progress"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/menuReportButton"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

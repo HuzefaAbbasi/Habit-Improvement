@@ -8,11 +8,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.badge.BadgeUtils;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -32,12 +35,6 @@ public class RecyclerViewAdapterSchedule extends RecyclerView.Adapter<RecyclerVi
         this.context = context;
         this.scheduleList = scheduleList;
         this.habit = habit;
-    }
-
-    public void removeItem(int position) {
-        // Remove the item from the list
-        scheduleList.remove(position);
-        notifyItemRemoved(position);
     }
 
     @NonNull
@@ -64,11 +61,25 @@ public class RecyclerViewAdapterSchedule extends RecyclerView.Adapter<RecyclerVi
         long minutes = TimeUnit.MILLISECONDS.toMinutes(durationInMillis);
         long seconds = TimeUnit.MILLISECONDS.toSeconds(durationInMillis) % 60;
         String durationString = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+        durationString = durationString + " mins";
+        String amPm;
+        LocalTime startTimeAMPM = schedule.getStartTime();
+        int hourOfDay = startTimeAMPM.getHour();
+        int hour;
+        int mins = startTimeAMPM.getMinute();
+        if (hourOfDay >= 12) {
+            amPm = "PM";
+            hour = (hourOfDay == 12) ? 12 : hourOfDay - 12;
+        } else {
+            amPm = "AM";
+            hour = (hourOfDay == 0) ? 12 : hourOfDay;
+        }
 
-        //for duration caluclation, let's see
+        startTimeAMPM = LocalTime.of(hour, mins);
+
         holder.duration.setText(durationString);
         holder.taskName.setText(schedule.getTask().getTaskName());
-        holder.startingTime.setText(schedule.getStartTime().toString());
+        holder.startingTime.setText(startTimeAMPM.toString() + " "+ amPm);
         holder.countDownTimerText.setText(schedule.getEndTime().toString());
 
 
@@ -101,7 +112,7 @@ public class RecyclerViewAdapterSchedule extends RecyclerView.Adapter<RecyclerVi
 //        }
         if (shouldStartCountDown(schedule)) {
             holder.countDownTimerText.setVisibility(View.VISIBLE);
-            startCountDown(holder, durationInMillis);
+            startCountDown(holder, calculateTimerInMillis(schedule));
         } else {
             holder.countDownTimerText.setVisibility(View.INVISIBLE);
             holder.countDownTimerText.setText("");
@@ -118,14 +129,10 @@ public class RecyclerViewAdapterSchedule extends RecyclerView.Adapter<RecyclerVi
     private boolean shouldStartCountDown(Schedule schedule) {
         Log.d(TAG, " Build.VERSION_CODES.O Found)");
         LocalTime currentTime = LocalTime.now();
-        //removed the :ss format becasue comparison can't happen
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-        String startTimeStr = currentTime.format(timeFormatter);
-        Log.d(TAG, "ShouldCountDownStart?" + startTimeStr.equals(schedule.getStartTime().toString()));
-        Log.d(TAG, "ShouldCountDownStart?" + startTimeStr + schedule.getStartTime().toString());
-        Log.d(TAG, "ShouldCountDownStart?" + startTimeStr.equals(schedule.getStartTime().toString()));
-
-        return startTimeStr.equals(schedule.getStartTime().toString());
+        //remove the :ss format if comparison by just startTime needed
+        Log.d(TAG, "ShouldCountDownStart?" + currentTime.isAfter(schedule.getStartTime()));
+        Log.d(TAG, "ShouldCountDownStart?" + currentTime.isBefore(schedule.getEndTime()));
+        return currentTime.isAfter(schedule.getStartTime()) && currentTime.isBefore(schedule.getEndTime());
     }
 
     private void startCountDown(ViewHolder holder, long durationInMillis) {
@@ -148,7 +155,7 @@ public class RecyclerViewAdapterSchedule extends RecyclerView.Adapter<RecyclerVi
                 int currentPosition = holder.getAdapterPosition();
                 if (currentPosition != RecyclerView.NO_POSITION && currentPosition < scheduleList.size() - 1) {
                     Schedule nextSchedule = scheduleList.get(currentPosition + 1);
-                    long nextDurationInMillis = calculateDurationInMillis(nextSchedule);
+                    long nextDurationInMillis = calculateTimerInMillis(nextSchedule);
                     startCountDown(holder, nextDurationInMillis);
                 }
             }
@@ -161,9 +168,21 @@ public class RecyclerViewAdapterSchedule extends RecyclerView.Adapter<RecyclerVi
 
         long startTimeInMillis = startTime.toNanoOfDay() / 1_000_000;
         long endTimeInMillis = endTime.toNanoOfDay() / 1_000_000;
+        Log.d("RecyclerVieAdapterSchedule", startTimeInMillis +""+ endTimeInMillis);
 
         return endTimeInMillis - startTimeInMillis;
     }
+
+    private long calculateTimerInMillis(Schedule schedule) {
+        LocalTime localTime = LocalTime.now();
+        LocalTime endTime = schedule.getEndTime();
+
+        long localTimeInMillis = localTime.toNanoOfDay() / 1_000_000;
+        long endTimeInMillis = endTime.toNanoOfDay() / 1_000_000;
+           Log.d("RecyclerVieAdapterSchedule", localTimeInMillis +""+ endTimeInMillis);
+        return endTimeInMillis - localTimeInMillis;
+    }
+
 
     //how many items
     @Override
@@ -178,48 +197,62 @@ public class RecyclerViewAdapterSchedule extends RecyclerView.Adapter<RecyclerVi
         public TextView taskName;
         public TextView duration;
         public TextView startingTime;
- public CountDownTimer countDownTimer;
- public TextView countDownTimerText;
+        public CountDownTimer countDownTimer;
+        public TextView countDownTimerText;
+        public Button deleteButton;
         public ViewHolder(@NonNull View itemView) {
 
             super(itemView);
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
 
-            taskName = itemView.findViewById(R.id.textView017);
-            duration = itemView.findViewById(R.id.textView018);
-            startingTime = itemView.findViewById(R.id.textView019);
+            taskName = itemView.findViewById(R.id.textView7);
+            duration = itemView.findViewById(R.id.textView8);
+            startingTime = itemView.findViewById(R.id.textView9);
             countDownTimerText = itemView.findViewById(R.id.textView10);
+            deleteButton = itemView.findViewById(R.id.deleteButton);
+            deleteButton.setOnClickListener(new View.OnClickListener() {
 
-        }
 
-        @Override
-        public void onClick(View v) {
+                @Override
+                public void onClick(View v) {
+                    // Handle the delete button click event for the specific card here
+                    // Remove the item from the list and notify the adapter
+                    // DBHelper habit = new DBHelper(context.getApplicationContext(), "db", null,1);
+                    // Handle the long click event
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        // Call the removeItem() method from the adapter to delete the card
+//                ((RecyclerViewAdapterSchedule) itemView.getContext()).removeItem(position);
+                        // Delete the corresponding Schedule entry from the database using the position or Schedule ID
+                        Schedule schedule = scheduleList.get(position);
+                        LocalDate localDate = schedule.getDate();
+                        LocalTime localStartTime = schedule.getStartTime();
+                        LocalTime localEndTime = schedule.getEndTime();
+                        habit.deleteSchedule(localDate,localStartTime,localEndTime);
+                        //for updation in real time
+                        scheduleList.remove(position);
+                        notifyItemRemoved(position);
 
+                        Log.d(TAG, "Succesffuly deleted from RecyclerView");
+                        Toast.makeText(itemView.getContext() ,"Deletion Successful", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         }
 
         @Override
         public boolean onLongClick(View v) {
-           // DBHelper habit = new DBHelper(context.getApplicationContext(), "db", null,1);
             // Handle the long click event
-            int position = getAdapterPosition();
-            if (position != RecyclerView.NO_POSITION) {
-                // Call the removeItem() method from the adapter to delete the card
-//                ((RecyclerViewAdapterSchedule) itemView.getContext()).removeItem(position);
-                // Delete the corresponding Schedule entry from the database using the position or Schedule ID
-                Schedule schedule = scheduleList.get(position);
-                LocalDate localDate = schedule.getDate();
-                LocalTime localStartTime = schedule.getStartTime();
-                LocalTime localEndTime = schedule.getEndTime();
-                habit.deleteSchedule(localDate,localStartTime,localEndTime);
-              //for updation in real time
-                scheduleList.remove(position);
-                notifyItemRemoved(position);
-
-                Log.d(TAG, "Succesffuly deleted from RecyclerView");
-                Toast.makeText(itemView.getContext() ,"Deletion Successful", Toast.LENGTH_SHORT).show();
-            }
+            // Handle the long click event for the card here
+            // Show the delete button when long clicked
+            deleteButton.setVisibility(View.VISIBLE);
             return true;
+        }
+
+        @Override
+        public void onClick(View v) {
+            deleteButton.setVisibility(View.INVISIBLE);
         }
 
     }

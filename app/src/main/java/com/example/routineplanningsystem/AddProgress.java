@@ -5,6 +5,7 @@ import androidx.core.content.ContextCompat;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.text.Editable;
@@ -74,6 +75,9 @@ public class AddProgress extends AppCompatActivity {
         startTimeTextView = findViewById(R.id.startTextView);
 
         taskAutoComplete = findViewById(R.id.taskAutoTextView);
+        Button menuTaskButton = findViewById(R.id.menuTaskButton);
+        Button menuScheduleButton = findViewById(R.id.menuScheduleButton);
+        Button menuReportButton = findViewById(R.id.menuReportButton);
 
         Spinner feelingSpinner = findViewById(R.id.spinner);
         Spinner energySpinner = findViewById(R.id.spinner2);
@@ -307,6 +311,31 @@ public class AddProgress extends AppCompatActivity {
             }
         });
 
+        menuTaskButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AddProgress.this, TaskList.class);
+                startActivity(intent);
+            }
+        });
+
+        menuScheduleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AddProgress.this, ScheduleTabLayOutView.class);
+                startActivity(intent);
+            }
+        });
+
+        menuReportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AddProgress.this, BarChartClass.class);
+                startActivity(intent);
+            }
+        });
+
+
         energyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -367,35 +396,40 @@ public class AddProgress extends AppCompatActivity {
                                     if (startTimeCheck){
                                         if (duration > 0 && duration <= 600) {
                                             if(checkDuration){
-                                                // code to add Schedule
-                                                endTime = startTime.plusMinutes(duration);
-                                                //Selecting task which has entered task name
-                                                for (Task task: taskList){
-                                                    String str = task.getTaskName().trim().toLowerCase();
-                                                    if(enteredTask.equals(str)){
-                                                        selectedTask = task;
-                                                        break;
+                                                if (!endTime.isBefore(startTime)){
+                                                    endTime = startTime.plusMinutes(duration);
+                                                    //Selecting task which has entered task name
+                                                    for (Task task: taskList){
+                                                        String str = task.getTaskName().trim().toLowerCase();
+                                                        if(enteredTask.equals(str)){
+                                                            selectedTask = task;
+                                                            break;
+                                                        }
+                                                    }
+
+                                                    Progress progress = new Progress(date, startTime, endTime, selectedTask,
+                                                            energyValue+1, feelingValue+1);
+                                                    boolean success = dbHelper.insertProgress(progress);
+
+                                                    if (success){
+                                                        Toast.makeText(AddProgress.this, "Added Successfully", Toast.LENGTH_SHORT).show();
+                                                        dateTextView.setText("Select Date");
+                                                        startTimeTextView.setText("Select Time");
+                                                        durationTextView.setText("0 min");
+                                                        taskAutoComplete.setText(null);
+                                                        feelingSpinner.setSelection(0);
+                                                        energySpinner.setSelection(0);
+                                                        duration = 0;
+                                                        durationStack.clear();
+                                                    }
+                                                    else {
+                                                        Toast.makeText(AddProgress.this, "Progress Adding Failed", Toast.LENGTH_SHORT).show();
                                                     }
                                                 }
-
-                                                Progress progress = new Progress(date, startTime, endTime, selectedTask,
-                                                        energyValue+1, feelingValue+1);
-                                                boolean success = dbHelper.insertProgress(progress);
-
-                                                if (success){
-                                                    Toast.makeText(AddProgress.this, "Added Successfully", Toast.LENGTH_SHORT).show();
-                                                    dateTextView.setText("Select Date");
-                                                    startTimeTextView.setText("Select Time");
-                                                    durationTextView.setText("0 min");
-                                                    taskAutoComplete.setText(null);
-                                                    feelingSpinner.setSelection(0);
-                                                    energySpinner.setSelection(0);
-                                                    duration = 0;
-                                                    durationStack.clear();
-                                                }
                                                 else {
-                                                    Toast.makeText(AddProgress.this, "Progress Adding Failed", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(AddProgress.this, "Please Enter Progress for Current Date Only", Toast.LENGTH_SHORT).show();
                                                 }
+
                                             }
                                             else{
                                                 Toast.makeText(AddProgress.this, "Progress already Exists", Toast.LENGTH_SHORT).show();
@@ -428,5 +462,15 @@ public class AddProgress extends AppCompatActivity {
                 }
             }
         });
+    }
+    @Override
+    public void onBackPressed() {
+        // Handle the back button press here
+        // Perform your desired action or navigation
+
+        // If you want to keep the default behavior (e.g., navigate back),
+        // you can call the super method
+        Intent intent = new Intent(AddProgress.this, ProgressTabLayOutView.class);
+        startActivity(intent);
     }
 }

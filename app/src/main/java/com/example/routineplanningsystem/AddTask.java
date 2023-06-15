@@ -8,17 +8,12 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.icu.util.Calendar;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
 
 public class AddTask extends AppCompatActivity {
 
@@ -31,19 +26,10 @@ public class AddTask extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
         DBHelper dbHelper = new DBHelper(this, "habit",null, 1);
-
-//        dbHelper.insertTask(new Task("Work", null, 2));
-//        dbHelper.insertTask(new Task("Assignment", null, 2));
-//        dbHelper.insertTask(new Task("Quiz", null, 2));
-//        List<Task> list = dbHelper.getAllTasks();
-//        Log.d("List Size", "onCreate: "+ list.size());
         EditText nameEditBox, descriptionEditBox;
-        Button btn1, btn2, btn3, btn4, btn5, btn6, addButton, menuTaskButton, menuScheduleButton, menuProgressButton, menuReportButton;
+        Button btn1, btn2, btn3, btn4, btn5, btn6, addButton;
 
-        menuTaskButton = findViewById(R.id.menuTaskButton);
-        menuScheduleButton = findViewById(R.id.menuScheduleButton);
-        menuProgressButton = findViewById(R.id.menuProgressButton);
-        menuReportButton = findViewById(R.id.menuReportButton);
+
 
         nameEditBox = findViewById(R.id.taskNameEditText);
         descriptionEditBox = findViewById(R.id.descriptionEditText);
@@ -60,20 +46,40 @@ public class AddTask extends AppCompatActivity {
         categoryText = findViewById(R.id.categoryTextView);
 
         nameBox = findViewById(R.id.nameBox);
+        Button menuProgressButton = findViewById(R.id.menuProgressButton);
+        Button menuScheduleButton = findViewById(R.id.menuScheduleButton);
+        Button menuReportButton = findViewById(R.id.menuReportButton);
 
-//        menuScheduleButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(this, );
-//
-//
-//            }
-//        });
+
+
+        menuProgressButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AddTask.this, ProgressTabLayOutView.class);
+                startActivity(intent);
+            }
+        });
+
+        menuScheduleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AddTask.this, ScheduleTabLayOutView.class);
+                startActivity(intent);
+            }
+        });
+
+        menuReportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AddTask.this, BarChartClass.class);
+                startActivity(intent);
+            }
+        });
 
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                  setTaskCategory(R.color.work,"Work",1);
+                setTaskCategory(R.color.work,"Work",1);
             }
         });
         btn2.setOnClickListener(new View.OnClickListener() {
@@ -146,6 +152,16 @@ public class AddTask extends AppCompatActivity {
         taskCategory = category;
         taskType = type;
         categoryText.setText(taskCategory);
+    }
+    @Override
+    public void onBackPressed() {
+        // Handle the back button press here
+        // Perform your desired action or navigation
+
+        // If you want to keep the default behavior (e.g., navigate back),
+        // you can call the super method
+        Intent intent = new Intent(AddTask.this, TaskList.class);
+        startActivity(intent);
     }
 
 }

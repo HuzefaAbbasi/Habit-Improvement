@@ -12,14 +12,46 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RoutinePlanningSystem"
         tools:targetApi="31">
+
+        <activity
+            android:name=".AddProgress"
+            android:exported="true">
+        </activity>
         <activity
             android:name=".ProgressTabLayOutView"
-            android:exported="true" >
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+            android:exported="true">
         </activity>
+        <activity
+            android:name=".AddSchedule"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".ScheduleTabLayOutView"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".AddTask"
+            android:exported="true">
+
+        </activity>
+        <activity
+            android:name=".TaskList"
+            android:exported="true">
+        </activity>
+
+        <activity
+            android:name=".BarChartClass"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".BarChartClassTaskView"
+            android:exported="true">
+        </activity>
+
     </application>
 
 </manifest>

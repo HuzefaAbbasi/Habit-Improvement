@@ -5,6 +5,7 @@ import androidx.core.content.ContextCompat;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.text.Editable;
@@ -67,7 +68,12 @@ public class AddSchedule extends AppCompatActivity {
         startTimeTextView = findViewById(R.id.startTextView);
 
         taskAutoComplete = findViewById(R.id.taskAutoTextView);
+        Button menuProgressButton = findViewById(R.id.menuProgressButton);
+        Button menuTaskButton = findViewById(R.id.menuTaskButton);
+        Button menuReportButton = findViewById(R.id.menuReportButton);
+
         DBHelper dbHelper = new DBHelper(this, "habit",null, 1);
+
 
         List<Schedule> list = dbHelper.getAllScheduleForDate(LocalDate.of(2023,5,4));
 //        dbHelper.insertTask(new Task("Project",null, 5));
@@ -138,6 +144,30 @@ public class AddSchedule extends AppCompatActivity {
             public void onClick(View v) {
                 // Show the dropdown options
                 taskAutoComplete.showDropDown();
+            }
+        });
+
+        menuProgressButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AddSchedule.this, ProgressTabLayOutView.class);
+                startActivity(intent);
+            }
+        });
+
+        menuTaskButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AddSchedule.this, TaskList.class);
+                startActivity(intent);
+            }
+        });
+
+        menuReportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AddSchedule.this, BarChartClass.class);
+                startActivity(intent);
             }
         });
 
@@ -238,27 +268,9 @@ public class AddSchedule extends AppCompatActivity {
                     String str = task.getTaskName().trim().toLowerCase();
                     if (enteredTask.equals(str)) {
                         taskAutoComplete.setTextColor(ContextCompat.getColor(getApplicationContext(), colorVal.get(task.getTaskType())));
-//                        if (task.getTaskType() == 1) {
-//                            taskAutoComplete.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.work));
-//                            break;
-//                        } else if (task.getTaskType() == 2) {
-//                            taskAutoComplete.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.sleep));
-//                            break;
-//                        } else if (task.getTaskType() == 3) {
-//                            taskAutoComplete.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.spiritual));
-//                            break;
-//                        } else if (task.getTaskType() == 4) {
-//                            taskAutoComplete.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.relax));
-//                            break;
-//                        } else if (task.getTaskType() == 5) {
-//                            taskAutoComplete.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.development));
-//                            break;
-//                        } else if (task.getTaskType() == 6) {
-//                            taskAutoComplete.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.social));
-//                            break;
-//                        }
+                     }
                     }
-                }
+
             }
         });
 
@@ -278,6 +290,7 @@ public class AddSchedule extends AppCompatActivity {
                 }
 
                 endTime = startTime.plusMinutes(duration);
+
                 boolean checkDuration = dbHelper.checkDate("Schedule",date,startTime,endTime);
                 Log.d("checkDuration", "Check: "+checkDuration);
 
@@ -289,30 +302,35 @@ public class AddSchedule extends AppCompatActivity {
                             if (startTimeCheck){
                                 if (duration > 0 && duration <= 600) {
                                     if (checkDuration){
-                                        // code to add Schedule
-                                        endTime = startTime.plusMinutes(duration);
-                                        //Selecting task which has entered task name
-                                        for (Task task: taskList){
-                                            String str = task.getTaskName().trim().toLowerCase();
-                                            if(enteredTask.equals(str)){
-                                                selectedTask = task;
-                                                break;
+                                        if (!endTime.isBefore(startTime)) {
+// code to add Schedule
+                                            endTime = startTime.plusMinutes(duration);
+                                            //Selecting task which has entered task name
+                                            for (Task task: taskList){
+                                                String str = task.getTaskName().trim().toLowerCase();
+                                                if(enteredTask.equals(str)){
+                                                    selectedTask = task;
+                                                    break;
+                                                }
+                                            }
+                                            Schedule schedule = new Schedule(date, startTime, endTime, selectedTask);
+                                            boolean success = dbHelper.insertSchedule(schedule);
+
+                                            if (success){
+                                                Toast.makeText(AddSchedule.this, "Added Successfully", Toast.LENGTH_SHORT).show();
+                                                dateTextView.setText("Select Date");
+                                                startTimeTextView.setText("Select Time");
+                                                durationTextView.setText("0 min");
+                                                taskAutoComplete.setText(null);
+                                                duration = 0;
+                                                durationStack.clear();
+                                            }
+                                            else {
+                                                Toast.makeText(AddSchedule.this, "Schedule Adding Failed", Toast.LENGTH_SHORT).show();
                                             }
                                         }
-                                        Schedule schedule = new Schedule(date, startTime, endTime, selectedTask);
-                                        boolean success = dbHelper.insertSchedule(schedule);
-
-                                        if (success){
-                                            Toast.makeText(AddSchedule.this, "Added Successfully", Toast.LENGTH_SHORT).show();
-                                            dateTextView.setText("Select Date");
-                                            startTimeTextView.setText("Select Time");
-                                            durationTextView.setText("0 min");
-                                            taskAutoComplete.setText(null);
-                                            duration = 0;
-                                            durationStack.clear();
-                                        }
                                         else {
-                                            Toast.makeText(AddSchedule.this, "Schedule Adding Failed", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(AddSchedule.this, "Please Enter Schedule for Current Date Only", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                     else{
@@ -321,7 +339,7 @@ public class AddSchedule extends AppCompatActivity {
 
                                 } else{
                                     Toast.makeText(AddSchedule.this, "Please Add Correct Duration", Toast.LENGTH_SHORT).show();
-                                    }
+                                }
                             } else {
                                 Toast.makeText(AddSchedule.this, "Start Time not Selected", Toast.LENGTH_SHORT).show();
                             }
@@ -336,5 +354,16 @@ public class AddSchedule extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        // Handle the back button press here
+        // Perform your desired action or navigation
+
+        // If you want to keep the default behavior (e.g., navigate back),
+        // you can call the super method
+        Intent intent = new Intent(AddSchedule.this, ScheduleTabLayOutView.class);
+        startActivity(intent);
     }
 }

@@ -4,8 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.android.material.tabs.TabLayout;
@@ -14,28 +17,52 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class ScheduleTabLayOutView extends AppCompatActivity {
-
-
-
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "ScheduleTabLayOutView";
 
     //changes for Fragment implemetnation
     private TabLayout tabLayout;
     private ViewPager2 viewPager2;
     private ViewPagerAdapterSchedule adapterSchedule;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, " Build.VERSION_CODES.O Found)");
         super.onCreate(savedInstanceState);
-
-
         setContentView(R.layout.schedule_tablayout_view);
-        tabLayout = findViewById(R.id.tab_layout01);
-        viewPager2 = findViewById(R.id.view_pager01);
+        tabLayout = findViewById(R.id.tab_layout);
+        viewPager2 = findViewById(R.id.view_pager);
+        Button addButton = findViewById(R.id.addButton);
+        Button menuProgressButton = findViewById(R.id.menuProgressButton);
+        Button menuTaskButton = findViewById(R.id.menuTaskButton);
+        Button menuReportButton = findViewById(R.id.menuReportButton);
+
+        menuProgressButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ScheduleTabLayOutView.this, ProgressTabLayOutView.class);
+                startActivity(intent);
+            }
+        });
+
+        menuTaskButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ScheduleTabLayOutView.this, TaskList.class);
+                startActivity(intent);
+            }
+        });
+
+        menuReportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ScheduleTabLayOutView.this, BarChartClass.class);
+                startActivity(intent);
+            }
+        });
+
         Log.d(TAG, "onCreate: MainActivity created");
+
+
 
         tabLayout.addTab(tabLayout.newTab().setText("")); // Placeholder tab
         tabLayout.addTab(tabLayout.newTab().setText("")); // Placeholder tab
@@ -54,8 +81,12 @@ public class ScheduleTabLayOutView extends AppCompatActivity {
         adapterSchedule = new ViewPagerAdapterSchedule(fragmentManager, getLifecycle());
         viewPager2.setAdapter(adapterSchedule);
 
-        viewPager2.setCurrentItem(1000); // Set the center tab as default
-
+        viewPager2.post(new Runnable() {
+            @Override
+            public void run() {
+                viewPager2.setCurrentItem(50, false);// Set the center tab as default
+            }
+        });
         // Set the text on the tabs with the corresponding dates
         for (int i = 0; i < numberOfDatesToShow; i++) {
             LocalDate currentDate = LocalDate.now();
@@ -104,6 +135,14 @@ public class ScheduleTabLayOutView extends AppCompatActivity {
             String dateString = date.format(DateTimeFormatter.ofPattern("MMM d"));
             tab.setText(dateString);
         }).attach();
+
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ScheduleTabLayOutView.this, AddSchedule.class);
+                startActivity(intent);
+            }
+        });
 
         // Log some information for debugging
         Log.d(TAG, "onCreate: Tab count: " + tabLayout.getTabCount());

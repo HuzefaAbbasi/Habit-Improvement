@@ -2,12 +2,15 @@ package com.example.routineplanningsystem;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,64 +38,22 @@ public class BarChartClass extends AppCompatActivity {
         setContentView(R.layout.bar_chart_full_view);
         Log.d(TAG, "Finding IDs");
 
-        BarChart chartSchedule = findViewById(R.id.chartSchedule);
-        BarChart chartProgress = findViewById(R.id.chartProgress);
-        Button buttonWeek = findViewById(R.id.buttonByWeek);
-        Button buttonMonth = findViewById(R.id.buttonByMonth);
-        Button buttonYear = findViewById(R.id.buttonByYear);
-        Button buttonTaskView = findViewById(R.id.buttonTaskView);
+        BarChart chartSchedule = findViewById(R.id.chartSchedule01);
+        BarChart chartProgress = findViewById(R.id.chartProgress01);
+        Button buttonWeek = findViewById(R.id.buttonByWeek01);
+        Button buttonMonth = findViewById(R.id.buttonByMonth01);
+        Button buttonYear = findViewById(R.id.buttonByYear01);
+        Button buttonTaskView = findViewById(R.id.buttonFullView);
+        Button menuProgressButton = findViewById(R.id.menuProgressButton);
+        Button menuScheduleButton = findViewById(R.id.menuScheduleButton);
+        Button menuTaskButton = findViewById(R.id.menuTaskButton);
+
+
 
 //creating arrayList for dates
         Log.d(TAG, "Start succesful");
         //FOr month and week data
-        DBHelper habit = new DBHelper(this, "db", null, 1); //check
-
-        Task task1 = new Task("6", null ,2);
-        Task task2 = new Task("7", null ,3);
-
-
-        habit.insertTask(task1);  habit.insertTask(task2);
-        LocalTime time = LocalTime.of(12,55);
-        LocalTime endtime = LocalTime.of(15,12);
-
-        LocalTime time2 = LocalTime.of(12,56);
-        LocalTime endtime2 = LocalTime.of(19,12);
-
-        LocalTime time3 = LocalTime.of(17,57);
-        LocalTime endtime3 = LocalTime.of(19,12);
-
-        LocalTime time4 = LocalTime.of(17,24);
-        LocalTime endtime4 = LocalTime.of(19,12);
-
-        //for formatting and inserting hte schduele into Database
-        LocalDate date = LocalDate.of(2023, 6, 1);
-        LocalDate date2 = LocalDate.of(2023, 5, 6);
-        LocalDate date3 = LocalDate.of(2023, 5, 30);
-        LocalDate date4 = LocalDate.of(2023, 5, 28);
-
-
-        //        DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//        LocalDate localDate1 = LocalDate.parse(date.toString(), formatterDate);
-//        LocalDate localDate2 = LocalDate.parse(date2.toString(), formatterDate);
-//
-//        DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm:ss");
-//        LocalTime localStartTime = LocalTime.parse(time.toString(), formatterTime);
-//        LocalTime localEndTime = LocalTime.parse(endtime.toString(), formatterTime);
-//
-//        LocalTime localStartTime2 = LocalTime.parse(time2.toString(), formatterTime);
-//        LocalTime localEndTime2 = LocalTime.parse(endtime2.toString(), formatterTime);
-
-
-        //   Schedule schedule = new Schedule();
-//        Schedule schedule1 = new Schedule(localDate1, localStartTime, localEndTime, task1);
-//        Schedule schedule2 = new Schedule(localDate2, localStartTime2, localEndTime2, task2);
-        Schedule schedule1 = new Schedule(date, time, endtime, task1);
-        Schedule schedule2 = new Schedule(date2, time2, endtime2, task2);
-        Schedule schedule3 = new Schedule(date3, time3, endtime3, task1);
-        Schedule schedule4 = new Schedule(date3, time4, endtime4, task2);
-
-        habit.insertSchedule(schedule1); habit.insertSchedule(schedule2);
-        habit.insertSchedule(schedule3); habit.insertSchedule(schedule4);
+      //  DBHelper habit = new DBHelper(this, "habit", null, 1); //check
 
         chartsByWeekAndMonth(chartSchedule,chartProgress,"Week");
 
@@ -100,7 +61,10 @@ public class BarChartClass extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 chartsByWeekAndMonth(chartSchedule,chartProgress,"Week");
-
+                // Set the new drawable as the background of the button (deprecated)
+                buttonWeek.setBackground(getResources().getDrawable(R.drawable.addtaskbutton));
+                buttonMonth.setBackground(getResources().getDrawable(R.drawable.categorybox));
+                buttonYear.setBackground(getResources().getDrawable(R.drawable.categorybox));
             }
         });
 
@@ -108,6 +72,9 @@ public class BarChartClass extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 chartsByWeekAndMonth(chartSchedule,chartProgress,"Month");
+                buttonWeek.setBackground(getResources().getDrawable(R.drawable.categorybox));
+                buttonMonth.setBackground(getResources().getDrawable(R.drawable.addtaskbutton));
+                buttonYear.setBackground(getResources().getDrawable(R.drawable.categorybox));
             }
         });
 
@@ -115,24 +82,52 @@ public class BarChartClass extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 chartsByYear(chartSchedule,chartProgress);
+                buttonWeek.setBackground(getResources().getDrawable(R.drawable.categorybox));
+                buttonMonth.setBackground(getResources().getDrawable(R.drawable.categorybox));
+                buttonYear.setBackground(getResources().getDrawable(R.drawable.addtaskbutton));
             }
         });
 //for transition between by task and full view in report
         buttonTaskView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(BarChartClass.this, BarChartClassTaskView.class);
+                startActivity(intent);
             }
         });
 
         //need dates
         //creating database instance
 
+        menuProgressButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(BarChartClass.this, ProgressTabLayOutView.class);
+                startActivity(intent);
+            }
+        });
+
+        menuScheduleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(BarChartClass.this, ScheduleTabLayOutView.class);
+                startActivity(intent);
+            }
+        });
+
+        menuTaskButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(BarChartClass.this, TaskList.class);
+                startActivity(intent);
+            }
+        });
+
         Log.d(TAG, "Final in Main succesful");
     }
 
     private void chartsByWeekAndMonth(BarChart chartSchedule, BarChart chartProgress, String weekOrMonth){
-        DBHelper habit = new DBHelper(this, "db", null, 1); //check
+        DBHelper habit = new DBHelper(this, "habit", null, 1); //check
 
         //initlizing the arrays for putting data in both charts of progress and scheduels
         durationListArrayListSchedule = new ArrayList<>();
@@ -195,7 +190,7 @@ public class BarChartClass extends AppCompatActivity {
     }
 
     private void chartsByYear(BarChart chartSchedule, BarChart chartProgress){
-        DBHelper habit = new DBHelper(this, "db", null, 1); //check
+        DBHelper habit = new DBHelper(this, "habit", null, 1); //check
 
         //initlizing the arrays for putting data in both charts of progress and scheduels
         durationListMonthArrayListSchedule = new ArrayList<>();
@@ -261,17 +256,24 @@ public class BarChartClass extends AppCompatActivity {
         chartSchedule.setDrawBarShadow(false);
         chartSchedule.setDrawValueAboveBar(true);
         chartSchedule.getDescription().setEnabled(false);
-        chartSchedule.setBackgroundColor(Color.WHITE);
+        chartSchedule.setBackgroundColor(getResources().getColor(R.color.prominent_boxes));
 
         chartProgress.clear(); //for clearing existing data from chartProgress
         chartProgress.setDrawBarShadow(false);
         chartProgress.setDrawValueAboveBar(true);
         chartProgress.getDescription().setEnabled(false);
-        chartProgress.setBackgroundColor(Color.WHITE);
+        chartProgress.setBackgroundColor(getResources().getColor(R.color.prominent_boxes));
     }
 
     public void setXAxisLabels(BarChart barChart, ArrayList<DurationList> durationListArrayList){
         XAxis xAxis = barChart.getXAxis();
+        YAxis yAxisLeft = barChart.getAxisLeft();
+        YAxis yAxisRight = barChart.getAxisRight();// Get the y-axis object
+        xAxis.setTextColor(Color.WHITE);
+
+        yAxisLeft.setTextColor(Color.WHITE); // Set the text color for y-axis labels
+        yAxisRight.setTextColor(Color.WHITE);
+
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setGranularity(1f);
 
@@ -304,6 +306,13 @@ public class BarChartClass extends AppCompatActivity {
 
     public void setXAxisLabelsForYear(BarChart barChart, ArrayList<DurationListMonth> durationListArrayList){
         XAxis xAxis = barChart.getXAxis();
+        YAxis yAxisLeft = barChart.getAxisLeft();
+        YAxis yAxisRight = barChart.getAxisRight();// Get the y-axis object
+        xAxis.setTextColor(Color.WHITE);
+
+        yAxisLeft.setTextColor(Color.WHITE); // Set the text color for y-axis labels
+        yAxisRight.setTextColor(Color.WHITE);
+
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setGranularity(1f);
 
@@ -364,10 +373,14 @@ public class BarChartClass extends AppCompatActivity {
     }
 
     private void setChartWithColorsAndData(List<BarEntry> barEntries, BarChart barChart){
-        BarDataSet dataSet = new BarDataSet(barEntries, "Report");
+        BarDataSet dataSet = new BarDataSet(barEntries, null);
 // Set color for each entry based on its category
-        dataSet.setColors(Color.BLUE, Color.GREEN, Color.YELLOW, Color.GRAY, Color.RED, Color.BLACK); //doesn't recognize border it seems
-        dataSet.setStackLabels(new String[]{"Label 1", "Label 2", "Label 3", "Label 4", "Label 5", "Label 6"});
+        dataSet.setColors(getResources().getColor(R.color.work), getResources().getColor(R.color.sleep),getResources().getColor(R.color.spiritual),getResources().getColor(R.color.relax),getResources().getColor(R.color.development),getResources().getColor(R.color.social)); //doesn't recognize border it seems
+        dataSet.setStackLabels(new String[]{"Work", "Sleep", "Spiritual", "Relax", "Development", "Social"});
+        dataSet.setValueTextColor(Color.WHITE); // Set the text color for data values
+        //color for bottom legend
+        Legend legend = barChart.getLegend();
+        legend.setTextColor(Color.WHITE);
 
         //setting chartChart to bardata
         BarData data = new BarData(dataSet);
@@ -379,29 +392,7 @@ public class BarChartClass extends AppCompatActivity {
     }
 
 
-    //method for color to entreis
-//    private int getColorForCategory(int category) {
-//        int color;
-//
-//        // Define color mapping based on category value
-//        switch (category) {
-//            case 1:
-//                color = Color.RED;//0-ikkl.kl,k.
-//                break;
-//            case 2: color = Color.GREEN;
-//                break;
-//            case 3:
-//                color = Color.BLUE;
-//                break;
-//            // Add more cases for additional categories if needed
-//            default:
-//                color = Color.GRAY;
-//                break; // Set a default color if category value doesn't match any specific case
-//        }
-//        Log.d("Color", "Category: " + category + ", Color: " + color);
-//
-//        return color;
-//    }
+
 
 
 

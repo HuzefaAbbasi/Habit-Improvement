@@ -148,14 +148,13 @@ public class DBHelper extends SQLiteOpenHelper {
             Log.d("update task Error", e.getMessage());
             return false;
         }
-
     }
 
     public List<Task> getAllTasks() {
         List<Task> taskList = new ArrayList<>();
         try{
             SQLiteDatabase db = this.getReadableDatabase();
-            String selectQuery = "SELECT * FROM Task";
+            String selectQuery = "SELECT * FROM Task ORDER BY name";
             Cursor cursor = db.rawQuery(selectQuery, null);
             if (cursor.moveToFirst()) {
                 do {
@@ -262,10 +261,19 @@ public class DBHelper extends SQLiteOpenHelper {
     public boolean deleteSchedule(LocalDate date, LocalTime startTime, LocalTime endTime ) {
         try {
             SQLiteDatabase db = this.getWritableDatabase();
+
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+
+            String formattedStartTime = startTime.format(timeFormatter);
+            String formattedEndTime = endTime.format(timeFormatter);
             String dateStr = String.valueOf(date);
-            String startTimeStr = String.valueOf(startTime);
-            String endTimeStr = String.valueOf(endTime);
-            String[] whereArgs = {dateStr,startTimeStr ,endTimeStr };
+//            String startTimeStr = String.valueOf(startTime);
+//            String endTimeStr = String.valueOf(endTime);
+
+            //getting time into format for insertion in db
+
+            Log.d("Check Delete", "deleteSchedule: "+ dateStr+ " " +formattedStartTime + " "+formattedEndTime);
+            String[] whereArgs = {dateStr,formattedStartTime ,formattedEndTime };
 
             long k = db.delete("Schedule",
                     "date = ? AND startTime = ? AND endTime = ?",
@@ -332,7 +340,7 @@ public class DBHelper extends SQLiteOpenHelper {
             String dateStr = String.valueOf(formattedDate);
 
             Log.d("DateStr", dateStr);
-            String selectQuerySchedule = "SELECT * FROM Schedule WHERE date = ?";
+            String selectQuerySchedule = "SELECT * FROM Schedule WHERE date = ? ORDER BY startTime";
             Cursor cursor = db.rawQuery(selectQuerySchedule, new String[]{dateStr});
 
             if (cursor.moveToFirst()) {
@@ -457,10 +465,19 @@ public class DBHelper extends SQLiteOpenHelper {
     public boolean deleteProgress(LocalDate date, LocalTime startTime, LocalTime endTime) {
         try {
             SQLiteDatabase db = this.getWritableDatabase();
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+
+            String formattedStartTime = startTime.format(timeFormatter);
+            String formattedEndTime = endTime.format(timeFormatter);
             String dateStr = String.valueOf(date);
-            String startTimeStr = String.valueOf(startTime);
-            String endTimeStr = String.valueOf(endTime);
-            String[] whereArgs = {dateStr,startTimeStr ,endTimeStr };
+//            String startTimeStr = String.valueOf(startTime);
+//            String endTimeStr = String.valueOf(endTime);
+
+            //getting time into format for insertion in db
+
+            Log.d("Check Delete", "deleteSchedule: "+ dateStr+ " " +formattedStartTime + " "+formattedEndTime);
+            String[] whereArgs = {dateStr,formattedStartTime ,formattedEndTime };
+
 
             long k = db.delete("Progress",
                     "date = ? AND startTime = ? AND endTime = ?",
@@ -526,7 +543,7 @@ public class DBHelper extends SQLiteOpenHelper {
             String dateStr = String.valueOf(formattedDate);
 
             Log.d("DateStr", dateStr);
-            String selectQuerySchedule = "SELECT * FROM Progress WHERE date = ?";
+            String selectQuerySchedule = "SELECT * FROM Progress WHERE date = ?  ORDER BY startTime";
             Cursor cursor = db.rawQuery(selectQuerySchedule, new String[]{dateStr});
 
             if (cursor.moveToFirst()) {
@@ -601,7 +618,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String formattedStartDate = startDate.format(dateFormatter);
 
         String selectQuerySchedule = "SELECT n.date, n.startTime, n.endTime, t.taskType FROM " + tableName +
-                " n join Task t on n.taskName = t.name  WHERE n.date >= ? AND n.date <= ?";
+                " n join Task t on n.taskName = t.name  WHERE n.date >= ? AND n.date <= ? ORDER BY n.date";
         Cursor cursor = db.rawQuery(selectQuerySchedule, new String[]{formattedStartDate, formattedCurrentDate});
         if (cursor.moveToFirst()){
             do{
@@ -693,7 +710,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String formattedStartDate = startDate.format(dateFormatter);
 
         String selectQuerySchedule = "SELECT n.date, n.startTime, n.endTime, t.taskType FROM " + tableName +
-                " n join Task t on n.taskName = t.name  WHERE n.date >= ? AND n.date <= ?";
+                " n join Task t on n.taskName = t.name  WHERE n.date >= ? AND n.date <= ? ORDER BY n.date";
         Cursor cursor = db.rawQuery(selectQuerySchedule, new String[]{formattedStartDate, formattedCurrentDate});
         if (cursor.moveToFirst()){
             do{
@@ -794,7 +811,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String formattedStartDate = startDate.format(dateFormatter);
 
         String selectQuerySchedule = "SELECT n.date, n.startTime, n.endTime, t.taskType FROM " + tableName +
-                " n join Task t on n.taskName = t.name  WHERE n.date >= ? AND n.date <= ? AND t.name = ?";
+                " n join Task t on n.taskName = t.name  WHERE n.date >= ? AND n.date <= ? AND t.name = ? ORDER BY n.date";
         Cursor cursor = db.rawQuery(selectQuerySchedule, new String[]{formattedStartDate, formattedCurrentDate, taskName});
         if (cursor.moveToFirst()){
             do{
@@ -855,7 +872,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String formattedStartDate = startDate.format(dateFormatter);
 
         String selectQuerySchedule = "SELECT n.date, n.startTime, n.endTime, t.taskType FROM " + tableName +
-                " n join Task t on n.taskName = t.name  WHERE n.date >= ? AND n.date <= ? AND t.name = ?";
+                " n join Task t on n.taskName = t.name  WHERE n.date >= ? AND n.date <= ? AND t.name = ? ORDER BY n.date";
         Cursor cursor = db.rawQuery(selectQuerySchedule, new String[]{formattedStartDate, formattedCurrentDate, taskName});
         if (cursor.moveToFirst()){
             do{

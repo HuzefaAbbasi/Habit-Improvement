@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,11 +63,26 @@ public class RecyclerViewAdapterProgress extends RecyclerView.Adapter<RecyclerVi
         long minutes = TimeUnit.MILLISECONDS.toMinutes(durationInMillis);
         long seconds = TimeUnit.MILLISECONDS.toSeconds(durationInMillis) % 60;
         String durationString = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
-
+        durationString = durationString + " mins";
         //for duration caluclation, let's see
+        String amPm;
+       LocalTime startTimeAMPM = progress.getStartTime();
+       int hourOfDay = startTimeAMPM.getHour();
+       int hour;
+       int mins = startTimeAMPM.getMinute();
+        if (hourOfDay >= 12) {
+            amPm = "PM";
+            hour = (hourOfDay == 12) ? 12 : hourOfDay - 12;
+        } else {
+            amPm = "AM";
+            hour = (hourOfDay == 0) ? 12 : hourOfDay;
+        }
+
+        startTimeAMPM = LocalTime.of(hour, mins);
+
         holder.duration.setText(durationString);
         holder.taskName.setText(progress.getTask().getTaskName());
-        holder.startingTime.setText(progress.getStartTime().toString());
+        holder.startingTime.setText(startTimeAMPM.toString() + " "+ amPm);
 
 
         Log.d(TAG, "onBindViewHolder: Progress: " + progress.getTask().getTaskName()); // Add this log to check the progress details
@@ -103,43 +119,56 @@ public class RecyclerViewAdapterProgress extends RecyclerView.Adapter<RecyclerVi
         public TextView startingTime;
         public CountDownTimer countDownTimer;
         public TextView countDownTimerText;
+        public Button deleteButton;
         public ViewHolder(@NonNull View itemView) {
 
             super(itemView);
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
 
-            taskName = itemView.findViewById(R.id.textView017);
-            duration = itemView.findViewById(R.id.textView018);
-            startingTime = itemView.findViewById(R.id.textView019);
-        }
+            taskName = itemView.findViewById(R.id.textView7);
+            duration = itemView.findViewById(R.id.textView8);
+            startingTime = itemView.findViewById(R.id.textView9);
+            deleteButton = itemView.findViewById(R.id.deleteButton);
+            deleteButton.setOnClickListener(new View.OnClickListener() {
 
-        @Override
-        public void onClick(View v) {
 
+                @Override
+                public void onClick(View v) {
+                    // Handle the delete button click event for the specific card here
+                    // Remove the item from the list and notify the adapter
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+
+                        // Delete the corresponding Progress entry from the database using the position or Progress ID
+                        Progress progress = progressList.get(position);
+                        LocalDate localDate = progress.getDate();
+                        LocalTime localStartTime = progress.getStartTime();
+                        LocalTime localEndTime = progress.getEndTime();
+                        habit.deleteProgress(localDate,localStartTime,localEndTime);
+                        //for updation in real time
+                        progressList.remove(position);
+                        notifyItemRemoved(position);
+
+                        Log.d(TAG, "Succesffuly deleted from RecyclerView");
+                        Toast.makeText(itemView.getContext() ,"Deletion Successful", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         }
 
         @Override
         public boolean onLongClick(View v) {
-            // DBHelper habit = new DBHelper(context.getApplicationContext(), "db", null,1);
             // Handle the long click event
-            int position = getAdapterPosition();
-            if (position != RecyclerView.NO_POSITION) {
-
-                  // Delete the corresponding Progress entry from the database using the position or Progress ID
-                Progress progress = progressList.get(position);
-                LocalDate localDate = progress.getDate();
-                LocalTime localStartTime = progress.getStartTime();
-                LocalTime localEndTime = progress.getEndTime();
-                habit.deleteProgress(localDate,localStartTime,localEndTime);
-                //for updation in real time
-                progressList.remove(position);
-                notifyItemRemoved(position);
-
-                Log.d(TAG, "Succesffuly deleted from RecyclerView");
-                Toast.makeText(itemView.getContext() ,"Deletion Successful", Toast.LENGTH_SHORT).show();
-            }
+            // Handle the long click event for the card here
+            // Show the delete button when long clicked
+            deleteButton.setVisibility(View.VISIBLE);
             return true;
+        }
+
+        @Override
+        public void onClick(View v) {
+            deleteButton.setVisibility(View.INVISIBLE);
         }
 
     }
