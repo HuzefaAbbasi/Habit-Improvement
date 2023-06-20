@@ -244,7 +244,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"
         android:layout_width="match_parent"
-        android:layout_height="76dp"
+        android:layout_height="60dp"
         android:background="@color/primary"
         android:elevation="21dp"
         android:padding="8dp"
@@ -254,8 +254,8 @@
 
         <Button
             android:id="@+id/menuTaskButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginStart="28dp"
             android:background="@drawable/addactive"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -264,8 +264,8 @@
 
         <Button
             android:id="@+id/menuReportButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginEnd="28dp"
             android:background="@drawable/report"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -274,20 +274,20 @@
 
         <Button
             android:id="@+id/menuScheduleButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/schedule"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/menuProgressButton"
-            app:layout_constraintHorizontal_bias="0.458"
+            app:layout_constraintHorizontal_bias="0.513"
             app:layout_constraintStart_toEndOf="@+id/menuTaskButton"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/menuProgressButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginEnd="44dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="52dp"
             android:background="@drawable/progress"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/menuReportButton"

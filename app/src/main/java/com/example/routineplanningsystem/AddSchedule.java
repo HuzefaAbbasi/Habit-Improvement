@@ -279,28 +279,25 @@ public class AddSchedule extends AppCompatActivity {
         addSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // task that user selects from auto complete
-                String enteredTask = taskAutoComplete.getText().toString().trim().toLowerCase();
-                //Checking that selected task is from the list
-                for (String listItem : taskNameList){
-                    if (enteredTask.equals(listItem.trim().toLowerCase())){
-                        taskCheck = true;
-                        break;
-                    }
-                }
-
-                endTime = startTime.plusMinutes(duration);
-
-                boolean checkDuration = dbHelper.checkDate("Schedule",date,startTime,endTime);
-                Log.d("checkDuration", "Check: "+checkDuration);
-
-
                 //Verifying all data is given properly
                 if (dateCheck){
                     if (!TextUtils.isEmpty(taskAutoComplete.getText())){
+                        // task that user selects from auto complete
+                        String enteredTask = taskAutoComplete.getText().toString().trim().toLowerCase();
+                        //Checking that selected task is from the list
+                        for (String listItem : taskNameList){
+                            if (enteredTask.equals(listItem.trim().toLowerCase())){
+                                taskCheck = true;
+                                break;
+                            }
+                        }
                         if (taskCheck){
                             if (startTimeCheck){
                                 if (duration > 0 && duration <= 600) {
+                                    endTime = startTime.plusMinutes(duration);
+
+                                    boolean checkDuration = dbHelper.checkDate("Schedule",date,startTime,endTime);
+                                    Log.d("checkDuration", "Check: "+checkDuration);
                                     if (checkDuration){
                                         if (!endTime.isBefore(startTime)) {
 // code to add Schedule

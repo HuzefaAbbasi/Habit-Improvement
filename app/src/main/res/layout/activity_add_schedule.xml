@@ -22,11 +22,66 @@
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout3"
         app:layout_constraintVertical_bias="1.0">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@color/primary"
+            android:elevation="21dp"
+            android:padding="8dp"
+            android:translationZ="-2dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addProgressButton"
+            app:layout_constraintVertical_bias="1.0">
+
+            <Button
+                android:id="@+id/menuTaskButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="28dp"
+                android:background="@drawable/plusicon"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/menuReportButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="28dp"
+                android:background="@drawable/report"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/menuScheduleButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/scheduleactive"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/menuProgressButton"
+                app:layout_constraintHorizontal_bias="0.485"
+                app:layout_constraintStart_toEndOf="@+id/menuTaskButton"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/menuProgressButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="56dp"
+                android:background="@drawable/progress"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/menuReportButton"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <Button
             android:id="@+id/addProgressButton"
             android:layout_width="160dp"
             android:layout_height="50dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="56dp"
             android:background="@drawable/addtaskbutton"
             android:elevation="12dp"
             android:gravity="center_horizontal|center_vertical"
@@ -51,61 +106,6 @@
             app:layout_constraintTop_toTopOf="@+id/addProgressButton"
             app:layout_constraintVertical_bias="0.533"
             app:srcCompat="@drawable/plusicon" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout2"
-            android:layout_width="match_parent"
-            android:layout_height="76dp"
-            android:background="@color/primary"
-            android:elevation="21dp"
-            android:padding="8dp"
-            android:translationZ="-2dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addProgressButton"
-            app:layout_constraintVertical_bias="0.877">
-
-            <Button
-                android:id="@+id/menuTaskButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="28dp"
-                android:background="@drawable/plusicon"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <Button
-                android:id="@+id/menuReportButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginEnd="28dp"
-                android:background="@drawable/report"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <Button
-                android:id="@+id/menuScheduleButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@drawable/scheduleactive"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/menuProgressButton"
-                app:layout_constraintHorizontal_bias="0.458"
-                app:layout_constraintStart_toEndOf="@+id/menuTaskButton"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <Button
-                android:id="@+id/menuProgressButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginEnd="44dp"
-                android:background="@drawable/progress"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/menuReportButton"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout7"
@@ -200,7 +200,7 @@
                 app:layout_constraintHorizontal_bias="0.644"
                 app:layout_constraintStart_toEndOf="@+id/startTextView"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.533"
+                app:layout_constraintVertical_bias="0.466"
                 tools:ignore="TouchTargetSizeCheck" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
