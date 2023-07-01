@@ -47,7 +47,7 @@ public class TaskList extends AppCompatActivity {
         taskArrayList.addAll(taskList);
 
 //for the recycleViewAdapter
-        recyclerViewAdapterTask = new RecyclerViewAdapterTask(TaskList.this,taskArrayList,habit);
+        recyclerViewAdapterTask = new RecyclerViewAdapterTask(TaskList.this, taskArrayList,habit);
         recyclerView.setAdapter(recyclerViewAdapterTask);
 
         goToAddTaskButton.setOnClickListener(new View.OnClickListener() {

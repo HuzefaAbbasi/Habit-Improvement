@@ -80,7 +80,7 @@ public class AddSchedule extends AppCompatActivity {
 //        dbHelper.insertTask(new Task("Android",null, 1));
 //        dbHelper.insertTask(new Task("Sleep",null, 4));
         taskList = dbHelper.getAllTasks();
-        for (Task task: taskList){
+        for (Task task : taskList){
             taskNameList.add(task.getTaskName());
         }
 
@@ -264,7 +264,7 @@ public class AddSchedule extends AppCompatActivity {
                 // Check the selected value and update the text color accordingly
                 // task that user selects from auto complete
                 String enteredTask = taskAutoComplete.getText().toString().trim().toLowerCase();
-                for (Task task: taskList){
+                for (Task task : taskList){
                     String str = task.getTaskName().trim().toLowerCase();
                     if (enteredTask.equals(str)) {
                         taskAutoComplete.setTextColor(ContextCompat.getColor(getApplicationContext(), colorVal.get(task.getTaskType())));
@@ -303,7 +303,7 @@ public class AddSchedule extends AppCompatActivity {
 // code to add Schedule
                                             endTime = startTime.plusMinutes(duration);
                                             //Selecting task which has entered task name
-                                            for (Task task: taskList){
+                                            for (Task task : taskList){
                                                 String str = task.getTaskName().trim().toLowerCase();
                                                 if(enteredTask.equals(str)){
                                                     selectedTask = task;

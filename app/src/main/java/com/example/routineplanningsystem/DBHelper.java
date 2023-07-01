@@ -572,7 +572,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
                         //Creating task object to pass to schedule as parameter
                         Task task = new Task(taskName, taskDescription,taskType);
-                        Progress progress = new Progress(localDate, localStartTime, localEndTime, task ,energy, feeling);
+                        Progress progress = new Progress(localDate, localStartTime, localEndTime, task,energy, feeling);
                         progressList.add(progress);
                     }
                 } while (cursor.moveToNext());
@@ -852,6 +852,116 @@ public class DBHelper extends SQLiteOpenHelper {
         Log.d("Tasks", "getWeekOrMonthDataByTask: "+ listWithDate);
         return listWithDate;
     }
+
+    public LocalDate getOptimalDate(String timeSpan){
+        Log.d("Start", "getOptimalDate: "+ timeSpan);
+        List<RecommendationCalculation> list = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Get the current date
+        LocalDate currentDate = LocalDate.now();
+        LocalDate startDate;
+
+        if (timeSpan.equalsIgnoreCase("Week")){
+            // Get the date of the week before
+            startDate = currentDate.minusWeeks(1);
+        } else if (timeSpan.equalsIgnoreCase("Month")) {
+            // Get the date of the month before
+            startDate = currentDate.minusMonths(1);
+        } else if (timeSpan.equalsIgnoreCase("Year")) {
+            // Get the date of the year before
+            startDate = currentDate.minusYears(1);
+        } else{
+            startDate = null;
+            Log.d("Time Span", "Wrong Time Span entered ");
+        }
+
+        //getting dates into format for selection from db
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedCurrentDate = currentDate.format(dateFormatter);
+        String formattedStartDate = startDate.format(dateFormatter);
+
+        String selectQuerySchedule = "SELECT date, startTime, endTime, feeling, energy FROM Progress where date >= ? AND " +
+                                      "date <= ? ORDER BY date";
+        Cursor cursor = db.rawQuery(selectQuerySchedule, new String[]{formattedStartDate, formattedCurrentDate});
+
+
+        if (cursor.moveToFirst()){
+            do{
+                @SuppressLint("Range") String dateS = cursor.getString(cursor.getColumnIndex("date"));
+                @SuppressLint("Range") String startTime = cursor.getString(cursor.getColumnIndex("startTime"));
+                @SuppressLint("Range") String endTime = cursor.getString(cursor.getColumnIndex("endTime"));
+                @SuppressLint("Range") int feeling = cursor.getInt(cursor.getColumnIndex("feeling"));
+                @SuppressLint("Range") int energy = cursor.getInt(cursor.getColumnIndex("energy"));
+                Log.d("Rec", "getOptimalDate: " + feeling +" "+ energy);
+
+                //Converting date and time to LocalDate and LocalTime
+                DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                LocalDate localDate = LocalDate.parse(dateS, formatterDate);
+
+                DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm:ss");
+                LocalTime localStartTime = LocalTime.parse(startTime, formatterTime);
+                LocalTime localEndTime = LocalTime.parse(endTime, formatterTime);
+
+                Duration duration = Duration.between(localStartTime,localEndTime);
+
+                // Get the duration in minutes as an int
+                int minutes = (int) duration.toMinutes();
+                int value = feeling*energy*minutes;
+
+                boolean dateExists = false;
+                for (RecommendationCalculation calculation : list) {
+                    if (calculation.getDate().isEqual(localDate)) {
+                        // Date already exists, update its duration
+                        calculation.setValue(calculation.getValue() + value);
+                        dateExists = true;
+                        break;
+                    }
+                }
+                // If date does not exist, create a new DurationList and add it to listWithDate
+                if (!dateExists) {
+                    list.add(new RecommendationCalculation(localDate,value));
+                }
+            }while(cursor.moveToNext());
+        }
+
+        // Close the cursor and the database connection
+        cursor.close();
+        db.close();
+        Log.d("Tasks", "get Optimal Date: "+ list);
+
+        RecommendationCalculation obj = null;
+        int max;
+        if (!list.isEmpty()) {
+            Log.d("ListNot", "get Optimal Date: "+ list);
+            max = list.get(0).value;
+            obj = list.get(0);
+        } else {
+            Log.d("ListEmp", "get Optimal Date: "+ list);
+            max = 0;
+        }
+        for (RecommendationCalculation calculation : list) {
+            Log.d("Loop", "get Optimal Date: "+ list);
+            if (calculation.getValue() > max){
+                Log.d("Loop If", "get Optimal Date: "+ list);
+                max = calculation.getValue();
+                obj = calculation;
+            }
+        }
+
+        if (list.isEmpty()){
+            Log.d("Recome", "getOptimalDate: "+ currentDate);
+            return currentDate;
+
+        }else {
+            Log.d("Recome", "getOptimalDate: "+ obj.getDate());
+            return obj.getDate();
+
+        }
+    }
+
+
 
 
     public List<DurationListTaskMonth> getYearDataByTask(String tableName, String taskName){

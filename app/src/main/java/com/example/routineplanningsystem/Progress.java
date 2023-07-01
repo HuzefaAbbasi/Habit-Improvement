@@ -14,7 +14,7 @@ public class Progress extends Routine {
         this.feeling = feeling;
     }
 
-    void insertRoutine(Task task, LocalDate localDate, LocalTime localTime,  int enuintmEnergy, int enumFeeling) {
+    void insertRoutine(Task task, LocalDate localDate, LocalTime localTime, int enuintmEnergy, int enumFeeling) {
 
     }
 

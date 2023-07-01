@@ -9,7 +9,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.android.material.tabs.TabLayout;
 
@@ -23,12 +30,26 @@ public class ScheduleTabLayOutView extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager2 viewPager2;
     private ViewPagerAdapterSchedule adapterSchedule;
+    GoogleSignInOptions gso;
+    GoogleSignInClient gsc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, " Build.VERSION_CODES.O Found)");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.schedule_tablayout_view);
+
+
+//        //Google Login Code
+//        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+//        gsc = GoogleSignIn.getClient(this,gso);
+//        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+//
+//        Intent signInIntent = gsc.getSignInIntent();
+//        startActivityForResult(signInIntent,1000);
+//
+//        Log.d(TAG, "Google Name "+ acct.getDisplayName());
+
         tabLayout = findViewById(R.id.tab_layout);
         viewPager2 = findViewById(R.id.view_pager);
         Button addButton = findViewById(R.id.addButton);
@@ -149,6 +170,24 @@ public class ScheduleTabLayOutView extends AppCompatActivity {
         Log.d(TAG, "onCreate: View pager item count: " + adapterSchedule.getItemCount());
         Log.d(TAG, "onCreate: Current item: " + viewPager2.getCurrentItem());
         Log.d(TAG, "onCreate: MainActivity Succesfully Run");
+        UserManager userManager = UserManager.getInstance();
+        String userName = userManager.getUserName();
+        Log.d("UserName", "Name :"+userName);
 
     }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode,Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if(requestCode == 1000){
+//            Task<GoogleSignInAccount> myTask = GoogleSignIn.getSignedInAccountFromIntent(data);
+//
+//            try {
+//                myTask.getResult(ApiException.class);
+//            } catch (ApiException e) {
+//                Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//
+//    }
+
 }
